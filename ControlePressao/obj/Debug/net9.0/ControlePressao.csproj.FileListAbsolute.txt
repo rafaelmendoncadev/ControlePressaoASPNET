@@ -263,7 +263,6 @@ C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\De
 C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\Debug\net9.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\Debug\net9.0\scopedcss\bundle\ControlePressao.styles.css
 C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\Debug\net9.0\scopedcss\projectbundle\ControlePressao.bundle.scp.css
-C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\Debug\net9.0\compressed\yv0u962ly0-b9sayid5wm.gz
 C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\Debug\net9.0\compressed\8p6ivgge8x-61n19gt1b8.gz
 C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\Debug\net9.0\compressed\t1vfz6agqu-xtxxf3hu2r.gz
 C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\Debug\net9.0\compressed\sf2o1d0zg4-bqjiyaj88i.gz
@@ -337,3 +336,4 @@ C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\De
 C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\Debug\net9.0\ControlePressao.pdb
 C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\Debug\net9.0\ControlePressao.genruntimeconfig.cache
 C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\Debug\net9.0\ref\ControlePressao.dll
+C:\Users\Rafael\OneDrive\Projetos ASP NET\ControlePressao\ControlePressao\obj\Debug\net9.0\compressed\yv0u962ly0-ztux3glrpt.gz

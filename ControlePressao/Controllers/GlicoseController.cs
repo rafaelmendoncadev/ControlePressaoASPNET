@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ControlePressao.Data;
 using ControlePressao.Models;
 
 namespace ControlePressao.Controllers
 {
+    [Authorize]
     public class GlicoseController : Controller
     {
         private readonly ApplicationDbContext _context;
