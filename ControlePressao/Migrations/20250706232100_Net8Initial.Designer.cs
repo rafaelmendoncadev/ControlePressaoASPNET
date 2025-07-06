@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControlePressao.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250706225522_AddUserRelationships")]
-    partial class AddUserRelationships
+    [Migration("20250706232100_Net8Initial")]
+    partial class Net8Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.6");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.11");
 
             modelBuilder.Entity("ControlePressao.Models.Glicose", b =>
                 {
