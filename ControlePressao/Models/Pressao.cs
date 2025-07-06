@@ -30,6 +30,10 @@ namespace ControlePressao.Models
         [StringLength(500, ErrorMessage = "As observações devem ter no máximo 500 caracteres")]
         public string? Observacoes { get; set; }
 
+        // Relacionamento com usuário
+        public int UserId { get; set; }
+        public User? User { get; set; }
+
         // Propriedades calculadas
         public string ClassificacaoPressao
         {

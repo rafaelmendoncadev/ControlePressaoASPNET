@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ControlePressao.Data;
 using ControlePressao.Models;
+using System.Security.Claims;
 
 namespace ControlePressao.Controllers
 {
@@ -24,7 +25,9 @@ namespace ControlePressao.Controllers
         // GET: Pressao
         public async Task<IActionResult> Index()
         {
+            var userId = GetCurrentUserId();
             var pressoes = await _context.Pressao
+                .Where(p => p.UserId == userId)
                 .OrderByDescending(p => p.DataHora)
                 .ToListAsync();
             return View(pressoes);
@@ -38,8 +41,9 @@ namespace ControlePressao.Controllers
                 return NotFound();
             }
 
+            var userId = GetCurrentUserId();
             var pressao = await _context.Pressao
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
             if (pressao == null)
             {
                 return NotFound();
@@ -79,6 +83,7 @@ namespace ControlePressao.Controllers
             {
                 try
                 {
+                    pressao.UserId = GetCurrentUserId();
                     _context.Add(pressao);
                     await _context.SaveChangesAsync();
                     TempData["Success"] = "Medição de pressão salva com sucesso!";
@@ -100,7 +105,9 @@ namespace ControlePressao.Controllers
                 return NotFound();
             }
 
-            var pressao = await _context.Pressao.FindAsync(id);
+            var userId = GetCurrentUserId();
+            var pressao = await _context.Pressao
+                .FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
             if (pressao == null)
             {
                 return NotFound();
@@ -133,7 +140,22 @@ namespace ControlePressao.Controllers
             {
                 try
                 {
-                    _context.Update(pressao);
+                    var userId = GetCurrentUserId();
+                    var existingPressao = await _context.Pressao
+                        .FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
+                    
+                    if (existingPressao == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingPressao.DataHora = pressao.DataHora;
+                    existingPressao.Sistolica = pressao.Sistolica;
+                    existingPressao.Diastolica = pressao.Diastolica;
+                    existingPressao.FrequenciaCardiaca = pressao.FrequenciaCardiaca;
+                    existingPressao.Observacoes = pressao.Observacoes;
+
+                    _context.Update(existingPressao);
                     await _context.SaveChangesAsync();
                     TempData["Success"] = "Medição de pressão atualizada com sucesso!";
                 }
@@ -166,8 +188,9 @@ namespace ControlePressao.Controllers
                 return NotFound();
             }
 
+            var userId = GetCurrentUserId();
             var pressao = await _context.Pressao
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
             if (pressao == null)
             {
                 return NotFound();
@@ -181,7 +204,9 @@ namespace ControlePressao.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var pressao = await _context.Pressao.FindAsync(id);
+            var userId = GetCurrentUserId();
+            var pressao = await _context.Pressao
+                .FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
             if (pressao != null)
             {
                 _context.Pressao.Remove(pressao);
@@ -194,7 +219,18 @@ namespace ControlePressao.Controllers
 
         private bool PressaoExists(int id)
         {
-            return _context.Pressao.Any(e => e.Id == id);
+            var userId = GetCurrentUserId();
+            return _context.Pressao.Any(e => e.Id == id && e.UserId == userId);
+        }
+
+        private int GetCurrentUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return userId;
+            }
+            return 0; // Valor padrão para admin
         }
     }
 }

@@ -28,11 +28,12 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Ensure database is created
+// Ensure database is created and seed data
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     context.Database.EnsureCreated();
+    await ControlePressao.Data.SeedData.InitializeAsync(context);
 }
 
 // Configure the HTTP request pipeline.

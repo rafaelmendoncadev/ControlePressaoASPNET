@@ -17,7 +17,23 @@ namespace ControlePressao.Data
         {
             base.OnModelCreating(builder);
 
-            // Configurações específicas das entidades (removidas as configurações de relacionamento com Usuario)
+            // Configurações de relacionamento
+            builder.Entity<Pressao>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.Pressoes)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Glicose>()
+                .HasOne(g => g.User)
+                .WithMany(u => u.Glicoses)
+                .HasForeignKey(g => g.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configurações de índices
+            builder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
         }
     }
 }

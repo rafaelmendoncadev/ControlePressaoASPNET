@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ControlePressao.Data;
 using ControlePressao.Models;
+using System.Security.Claims;
 
 namespace ControlePressao.Controllers
 {
@@ -24,7 +25,9 @@ namespace ControlePressao.Controllers
         // GET: Glicose
         public async Task<IActionResult> Index()
         {
+            var userId = GetCurrentUserId();
             var glicoses = await _context.Glicose
+                .Where(g => g.UserId == userId)
                 .OrderByDescending(g => g.DataHora)
                 .ToListAsync();
             return View(glicoses);
@@ -38,8 +41,9 @@ namespace ControlePressao.Controllers
                 return NotFound();
             }
 
+            var userId = GetCurrentUserId();
             var glicose = await _context.Glicose
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
             if (glicose == null)
             {
                 return NotFound();
@@ -72,6 +76,7 @@ namespace ControlePressao.Controllers
             {
                 try
                 {
+                    glicose.UserId = GetCurrentUserId();
                     _context.Add(glicose);
                     await _context.SaveChangesAsync();
                     TempData["Success"] = "Medição de glicose salva com sucesso!";
@@ -93,7 +98,9 @@ namespace ControlePressao.Controllers
                 return NotFound();
             }
 
-            var glicose = await _context.Glicose.FindAsync(id);
+            var userId = GetCurrentUserId();
+            var glicose = await _context.Glicose
+                .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
             if (glicose == null)
             {
                 return NotFound();
@@ -120,7 +127,21 @@ namespace ControlePressao.Controllers
             {
                 try
                 {
-                    _context.Update(glicose);
+                    var userId = GetCurrentUserId();
+                    var existingGlicose = await _context.Glicose
+                        .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
+                    
+                    if (existingGlicose == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingGlicose.DataHora = glicose.DataHora;
+                    existingGlicose.Valor = glicose.Valor;
+                    existingGlicose.Periodo = glicose.Periodo;
+                    existingGlicose.Observacoes = glicose.Observacoes;
+
+                    _context.Update(existingGlicose);
                     await _context.SaveChangesAsync();
                     TempData["Success"] = "Medição de glicose atualizada com sucesso!";
                 }
@@ -153,8 +174,9 @@ namespace ControlePressao.Controllers
                 return NotFound();
             }
 
+            var userId = GetCurrentUserId();
             var glicose = await _context.Glicose
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
             if (glicose == null)
             {
                 return NotFound();
@@ -168,7 +190,9 @@ namespace ControlePressao.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var glicose = await _context.Glicose.FindAsync(id);
+            var userId = GetCurrentUserId();
+            var glicose = await _context.Glicose
+                .FirstOrDefaultAsync(g => g.Id == id && g.UserId == userId);
             if (glicose != null)
             {
                 _context.Glicose.Remove(glicose);
@@ -181,7 +205,18 @@ namespace ControlePressao.Controllers
 
         private bool GlicoseExists(int id)
         {
-            return _context.Glicose.Any(e => e.Id == id);
+            var userId = GetCurrentUserId();
+            return _context.Glicose.Any(e => e.Id == id && e.UserId == userId);
+        }
+
+        private int GetCurrentUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return userId;
+            }
+            return 0; // Valor padrão para admin
         }
     }
 }

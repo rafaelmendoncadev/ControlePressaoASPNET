@@ -6,9 +6,9 @@ namespace ControlePressao.Services
 {
     public interface ISaudeService
     {
-        Task<DashboardViewModel> ObterDadosDashboardAsync();
-        Task<List<AlertaSaude>> ObterAlertasAsync();
-        Task<EstatisticasSaude> ObterEstatisticasAsync();
+        Task<DashboardViewModel> ObterDadosDashboardAsync(int userId);
+        Task<List<AlertaSaude>> ObterAlertasAsync(int userId);
+        Task<EstatisticasSaude> ObterEstatisticasAsync(int userId);
     }
 
     public class SaudeService : ISaudeService
@@ -20,20 +20,22 @@ namespace ControlePressao.Services
             _context = context;
         }
 
-        public async Task<DashboardViewModel> ObterDadosDashboardAsync()
+        public async Task<DashboardViewModel> ObterDadosDashboardAsync(int userId)
         {
             var ultimasPressoes = await _context.Pressao
+                .Where(p => p.UserId == userId)
                 .OrderByDescending(p => p.DataHora)
                 .Take(10)
                 .ToListAsync();
 
             var ultimasGlicoses = await _context.Glicose
+                .Where(g => g.UserId == userId)
                 .OrderByDescending(g => g.DataHora)
                 .Take(10)
                 .ToListAsync();
 
-            var estatisticas = await ObterEstatisticasAsync();
-            var alertas = await ObterAlertasAsync();
+            var estatisticas = await ObterEstatisticasAsync(userId);
+            var alertas = await ObterAlertasAsync(userId);
 
             return new DashboardViewModel
             {
@@ -44,13 +46,13 @@ namespace ControlePressao.Services
             };
         }
 
-        public async Task<List<AlertaSaude>> ObterAlertasAsync()
+        public async Task<List<AlertaSaude>> ObterAlertasAsync(int userId)
         {
             var alertas = new List<AlertaSaude>();
 
             // Verificar pressão alta recente
             var pressaoRecente = await _context.Pressao
-                .Where(p => p.DataHora >= DateTime.Now.AddDays(-7))
+                .Where(p => p.UserId == userId && p.DataHora >= DateTime.Now.AddDays(-7))
                 .OrderByDescending(p => p.DataHora)
                 .FirstOrDefaultAsync();
 
@@ -70,7 +72,7 @@ namespace ControlePressao.Services
 
             // Verificar glicose alta recente
             var glicoseRecente = await _context.Glicose
-                .Where(g => g.DataHora >= DateTime.Now.AddDays(-7))
+                .Where(g => g.UserId == userId && g.DataHora >= DateTime.Now.AddDays(-7))
                 .OrderByDescending(g => g.DataHora)
                 .FirstOrDefaultAsync();
 
@@ -99,7 +101,7 @@ namespace ControlePressao.Services
             }
 
             // Verificar se não há medições recentes
-            var ultimaMedicao = await ObterUltimaMedicaoAsync();
+            var ultimaMedicao = await ObterUltimaMedicaoAsync(userId);
             if (ultimaMedicao.HasValue && ultimaMedicao.Value <= DateTime.Now.AddDays(-7))
             {
                 alertas.Add(new AlertaSaude
@@ -114,10 +116,14 @@ namespace ControlePressao.Services
             return alertas.OrderByDescending(a => a.DataHora).ToList();
         }
 
-        public async Task<EstatisticasSaude> ObterEstatisticasAsync()
+        public async Task<EstatisticasSaude> ObterEstatisticasAsync(int userId)
         {
-            var pressoes = await _context.Pressao.ToListAsync();
-            var glicoses = await _context.Glicose.ToListAsync();
+            var pressoes = await _context.Pressao
+                .Where(p => p.UserId == userId)
+                .ToListAsync();
+            var glicoses = await _context.Glicose
+                .Where(g => g.UserId == userId)
+                .ToListAsync();
 
             var estatisticas = new EstatisticasSaude
             {
@@ -137,19 +143,21 @@ namespace ControlePressao.Services
                 estatisticas.GlicoseMedia = glicoses.Average(g => g.Valor);
             }
 
-            estatisticas.UltimaMedicao = await ObterUltimaMedicaoAsync();
+            estatisticas.UltimaMedicao = await ObterUltimaMedicaoAsync(userId);
 
             return estatisticas;
         }
 
-        private async Task<DateTime?> ObterUltimaMedicaoAsync()
+        private async Task<DateTime?> ObterUltimaMedicaoAsync(int userId)
         {
             var ultimaPressao = await _context.Pressao
+                .Where(p => p.UserId == userId)
                 .OrderByDescending(p => p.DataHora)
                 .Select(p => p.DataHora)
                 .FirstOrDefaultAsync();
 
             var ultimaGlicose = await _context.Glicose
+                .Where(g => g.UserId == userId)
                 .OrderByDescending(g => g.DataHora)
                 .Select(g => g.DataHora)
                 .FirstOrDefaultAsync();

@@ -9,16 +9,16 @@ namespace ControlePressao.Models
         [Required(ErrorMessage = "O campo Nome é obrigatório.")]
         [StringLength(100, ErrorMessage = "O nome deve ter no máximo 100 caracteres.")]
         [Display(Name = "Nome Completo")]
-        public string Nome { get; set; }
+        public required string Nome { get; set; }
         
         [Required(ErrorMessage = "O campo Email é obrigatório.")]
         [EmailAddress(ErrorMessage = "Email em formato inválido.")]
         [StringLength(100, ErrorMessage = "O email deve ter no máximo 100 caracteres.")]
-        public string Email { get; set; }
+        public required string Email { get; set; }
         
         [Required(ErrorMessage = "O campo Senha é obrigatório.")]
         [StringLength(255, ErrorMessage = "A senha deve ter no máximo 255 caracteres.")]
-        public string Senha { get; set; }
+        public required string Senha { get; set; }
         
         [DataType(DataType.DateTime)]
         [Display(Name = "Data de Cadastro")]
@@ -33,6 +33,10 @@ namespace ControlePressao.Models
         
         [Display(Name = "Ativo")]
         public bool Ativo { get; set; }
+        
+        // Relacionamentos
+        public ICollection<Pressao>? Pressoes { get; set; }
+        public ICollection<Glicose>? Glicoses { get; set; }
         
         public User()
         {
