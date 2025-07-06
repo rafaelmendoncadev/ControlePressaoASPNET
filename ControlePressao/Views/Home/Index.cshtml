@@ -1,0 +1,213 @@
+﻿@model ControlePressao.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard - Controle de Saúde";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-4 text-primary mb-4">
+                <i class="fas fa-heartbeat"></i> Dashboard de Saúde
+            </h1>
+        </div>
+    </div>
+
+    <!-- Alertas -->
+    @if (Model.Alertas.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <h3>⚠️ Alertas</h3>
+                @foreach (var alerta in Model.Alertas)
+                {
+                    <div class="alert @alerta.Classe" role="alert">
+                        <strong>@alerta.Tipo:</strong> @alerta.Mensagem
+                        <small class="text-muted float-end">@alerta.DataHora.ToString("dd/MM/yyyy HH:mm")</small>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Estatísticas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">📊 Medições de Pressão</h5>
+                    <h2 class="card-text">@Model.Estatisticas.TotalMedicoesPressao</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">🩸 Medições de Glicose</h5>
+                    <h2 class="card-text">@Model.Estatisticas.TotalMedicoesGlicose</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">💓 Pressão Média</h5>
+                    <h4 class="card-text">
+                        @if (Model.Estatisticas.TotalMedicoesPressao > 0)
+                        {
+                            <text>@Model.Estatisticas.PressaoSistolicaMedia.ToString("F0")/@Model.Estatisticas.PressaoDiastolicaMedia.ToString("F0")</text>
+                        }
+                        else
+                        {
+                            <text>--/--</text>
+                        }
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">🍯 Glicose Média</h5>
+                    <h4 class="card-text">
+                        @if (Model.Estatisticas.TotalMedicoesGlicose > 0)
+                        {
+                            <text>@Model.Estatisticas.GlicoseMedia.ToString("F0") mg/dL</text>
+                        }
+                        else
+                        {
+                            <text>-- mg/dL</text>
+                        }
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ações Rápidas -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3>🚀 Ações Rápidas</h3>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="@Url.Action("Create", "Pressao")" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Nova Medição de Pressão
+                </a>
+                <a href="@Url.Action("Create", "Glicose")" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Nova Medição de Glicose
+                </a>
+                <a href="@Url.Action("Index", "Pressao")" class="btn btn-outline-primary">
+                    <i class="fas fa-list"></i> Ver Todas as Pressões
+                </a>
+                <a href="@Url.Action("Index", "Glicose")" class="btn btn-outline-success">
+                    <i class="fas fa-list"></i> Ver Todas as Glicoses
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Últimas Medições -->
+    <div class="row">
+        <!-- Últimas Pressões -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">🩺 Últimas Medições de Pressão</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.UltimasPressoes.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Pressão</th>
+                                        <th>BPM</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var pressao in Model.UltimasPressoes.Take(5))
+                                    {
+                                        <tr>
+                                            <td>@pressao.DataHora.ToString("dd/MM HH:mm")</td>
+                                            <td>@pressao.Sistolica/@pressao.Diastolica</td>
+                                            <td>@pressao.FrequenciaCardiaca</td>
+                                            <td>
+                                                <span class="badge bg-@(pressao.ClasseRisco == "Baixo" ? "success" : 
+                                                    pressao.ClasseRisco == "Moderado" ? "warning" : "danger")">
+                                                    @pressao.ClassificacaoPressao
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Nenhuma medição de pressão registrada.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Últimas Glicoses -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">🍯 Últimas Medições de Glicose</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.UltimasGlicoses.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Valor</th>
+                                        <th>Período</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var glicose in Model.UltimasGlicoses.Take(5))
+                                    {
+                                        <tr>
+                                            <td>@glicose.DataHora.ToString("dd/MM HH:mm")</td>
+                                            <td>@glicose.Valor mg/dL</td>
+                                            <td>@glicose.Periodo.ToString()</td>
+                                            <td>
+                                                <span class="badge bg-@(glicose.ClasseRisco == "Baixo" ? "success" : 
+                                                    glicose.ClasseRisco == "Moderado" ? "warning" : "danger")">
+                                                    @glicose.ClassificacaoGlicose
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Nenhuma medição de glicose registrada.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Estatisticas.UltimaMedicao.HasValue)
+{
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 
+                <strong>Última medição:</strong> @Model.Estatisticas.UltimaMedicao.Value.ToString("dd/MM/yyyy HH:mm")
+            </div>
+        </div>
+    </div>
+}

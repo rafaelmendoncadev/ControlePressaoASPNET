@@ -1,0 +1,113 @@
+@model IEnumerable<ControlePressao.Models.Pressao>
+
+@{
+    ViewData["Title"] = "Medições de Pressão Arterial";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="display-5">
+        <i class="fas fa-heartbeat text-primary"></i> Medições de Pressão Arterial
+    </h1>
+    <a asp-action="Create" class="btn btn-primary btn-lg">
+        <i class="fas fa-plus"></i> Nova Medição
+    </a>
+</div>
+
+@if (Model.Any())
+{
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-chart-line"></i> Histórico de Medições
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>
+                                <i class="fas fa-calendar"></i> @Html.DisplayNameFor(model => model.DataHora)
+                            </th>
+                            <th>
+                                <i class="fas fa-heartbeat"></i> Pressão (mmHg)
+                            </th>
+                            <th>
+                                <i class="fas fa-heart"></i> @Html.DisplayNameFor(model => model.FrequenciaCardiaca)
+                            </th>
+                            <th>
+                                <i class="fas fa-clipboard-check"></i> Classificação
+                            </th>
+                            <th>
+                                <i class="fas fa-sticky-note"></i> Observações
+                            </th>
+                            <th>
+                                <i class="fas fa-cogs"></i> Ações
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@Html.DisplayFor(modelItem => item.DataHora)</strong>
+                                </td>
+                                <td>
+                                    <span class="badge bg-primary fs-6">
+                                        @Html.DisplayFor(modelItem => item.Sistolica)/@Html.DisplayFor(modelItem => item.Diastolica)
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info">
+                                        @Html.DisplayFor(modelItem => item.FrequenciaCardiaca) bpm
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-@(item.ClasseRisco == "Baixo" ? "success" : 
+                                        item.ClasseRisco == "Moderado" ? "warning" : "danger")">
+                                        @item.ClassificacaoPressao
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.Observacoes))
+                                    {
+                                        <span class="text-muted">@item.Observacoes</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">--</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info" title="Detalhes">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Excluir">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">
+        <i class="fas fa-info-circle fa-2x mb-3"></i>
+        <h4>Nenhuma medição encontrada</h4>
+        <p class="mb-0">Comece registrando sua primeira medição de pressão arterial.</p>
+        <a asp-action="Create" class="btn btn-primary mt-3">
+            <i class="fas fa-plus"></i> Registrar Primeira Medição
+        </a>
+    </div>
+}

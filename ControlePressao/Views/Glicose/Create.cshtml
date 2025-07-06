@@ -1,0 +1,128 @@
+@model ControlePressao.Models.Glicose
+
+@{
+    ViewData["Title"] = "Nova Medição de Glicose";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-tint text-primary"></i> Nova Medição de Glicose
+                </h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-triangle"></i> Corrija os erros abaixo:
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="DataHora" class="form-label">
+                                    <i class="fas fa-calendar"></i> @Html.DisplayNameFor(m => m.DataHora)
+                                </label>
+                                <input asp-for="DataHora" class="form-control" type="datetime-local" />
+                                <span asp-validation-for="DataHora" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Valor" class="form-label">
+                                    <i class="fas fa-droplet"></i> @Html.DisplayNameFor(m => m.Valor)
+                                </label>
+                                <input asp-for="Valor" class="form-control" type="number" min="40" max="600" />
+                                <span asp-validation-for="Valor" class="text-danger"></span>
+                                <div class="form-text">Valor entre 40 e 600 mg/dL</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group mb-3">
+                                <label asp-for="Periodo" class="form-label">
+                                    <i class="fas fa-clock"></i> @Html.DisplayNameFor(m => m.Periodo)
+                                </label>
+                                <select asp-for="Periodo" class="form-select">
+                                    <option value="">Selecione o período do teste</option>
+                                    <option value="@ControlePressao.Models.PeriodoTeste.Jejum">Jejum</option>
+                                    <option value="@ControlePressao.Models.PeriodoTeste.PosRefeicao">Pós-refeição</option>
+                                    <option value="@ControlePressao.Models.PeriodoTeste.Casual">Casual</option>
+                                </select>
+                                <span asp-validation-for="Periodo" class="text-danger"></span>
+                                <div class="form-text">Selecione quando foi feita a medição</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Observacoes" class="form-label">
+                            <i class="fas fa-sticky-note"></i> @Html.DisplayNameFor(m => m.Observacoes)
+                        </label>
+                        <textarea asp-for="Observacoes" class="form-control" rows="3" placeholder="Observações adicionais (opcional)"></textarea>
+                        <span asp-validation-for="Observacoes" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Salvar Medição
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Card informativo -->
+<div class="row mt-4">
+    <div class="col-md-8 mx-auto">
+        <div class="card border-info">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">
+                    <i class="fas fa-info-circle"></i> Valores de Referência da Glicose
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6 class="text-primary">Jejum</h6>
+                        <ul class="list-unstyled small">
+                            <li><span class="badge bg-success">Normal</span> - 70 a 99 mg/dL</li>
+                            <li><span class="badge bg-warning">Pré-diabetes</span> - 100 a 125 mg/dL</li>
+                            <li><span class="badge bg-danger">Diabetes</span> - ≥ 126 mg/dL</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-primary">Pós-refeição</h6>
+                        <ul class="list-unstyled small">
+                            <li><span class="badge bg-success">Normal</span> - 70 a 139 mg/dL</li>
+                            <li><span class="badge bg-warning">Pré-diabetes</span> - 140 a 199 mg/dL</li>
+                            <li><span class="badge bg-danger">Diabetes</span> - ≥ 200 mg/dL</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-primary">Casual</h6>
+                        <ul class="list-unstyled small">
+                            <li><span class="badge bg-success">Normal</span> - 70 a 199 mg/dL</li>
+                            <li><span class="badge bg-danger">Suspeita</span> - ≥ 200 mg/dL</li>
+                        </ul>
+                        <div class="mt-2">
+                            <small><span class="badge bg-danger">Hipoglicemia</span> - &lt; 70 mg/dL</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
