@@ -1,0 +1,116 @@
+@{
+    ViewData["Title"] = "Bem-vindo ao ControlePressao";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="jumbotron bg-primary text-white rounded p-5 mb-4">
+            <div class="container-fluid py-5">
+                <h1 class="display-4 fw-bold">
+                    <i class="fas fa-heartbeat"></i> ControlePressao
+                </h1>
+                <p class="fs-4">
+                    Seu sistema completo para monitoramento de pressão arterial e glicose.
+                    Mantenha sua saúde em dia com controle inteligente e relatórios detalhados.
+                </p>
+                <div class="d-flex gap-3 mt-4">
+                    <a class="btn btn-light btn-lg" asp-controller="Account" asp-action="Login" role="button">
+                        <i class="fas fa-sign-in-alt"></i> Fazer Login
+                    </a>
+                    <a class="btn btn-outline-light btn-lg" asp-controller="Account" asp-action="Register" role="button">
+                        <i class="fas fa-user-plus"></i> Registrar-se
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-heartbeat fa-3x text-danger mb-3"></i>
+                <h4 class="card-title">Controle de Pressão</h4>
+                <p class="card-text">
+                    Monitore sua pressão arterial com facilidade. Registre medições, 
+                    acompanhe tendências e receba alertas quando necessário.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-tint fa-3x text-primary mb-3"></i>
+                <h4 class="card-title">Monitoramento de Glicose</h4>
+                <p class="card-text">
+                    Registre suas medições de glicose por período (jejum, pós-refeição, casual) 
+                    e mantenha controle total sobre sua saúde.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                <h4 class="card-title">Relatórios Inteligentes</h4>
+                <p class="card-text">
+                    Visualize gráficos, estatísticas e relatórios detalhados. 
+                    Acompanhe sua evolução ao longo do tempo.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-8 mx-auto">
+        <div class="card border-info">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle"></i> Por que usar o ControlePressao?
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">✓ Fácil de usar</h6>
+                        <p class="small">Interface intuitiva e amigável para todas as idades.</p>
+                        
+                        <h6 class="text-primary">✓ Seguro e privado</h6>
+                        <p class="small">Seus dados médicos ficam protegidos e privados.</p>
+                        
+                        <h6 class="text-primary">✓ Alertas inteligentes</h6>
+                        <p class="small">Receba notificações quando valores estiverem fora do normal.</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-primary">✓ Histórico completo</h6>
+                        <p class="small">Acesse todo o histórico de suas medições.</p>
+                        
+                        <h6 class="text-primary">✓ Relatórios detalhados</h6>
+                        <p class="small">Visualize estatísticas e gráficos da sua evolução.</p>
+                        
+                        <h6 class="text-primary">✓ Acesso em qualquer lugar</h6>
+                        <p class="small">Acesse seus dados de qualquer dispositivo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12 text-center">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="text-primary">Pronto para começar?</h5>
+                <p class="mb-3">Cadastre-se agora e comece a monitorar sua saúde de forma inteligente!</p>
+                <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Register">
+                    <i class="fas fa-rocket"></i> Começar Agora
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

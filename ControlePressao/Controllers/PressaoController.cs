@@ -22,7 +22,9 @@ namespace ControlePressao.Controllers
         // GET: Pressao
         public async Task<IActionResult> Index()
         {
-            var pressoes = await _context.Pressao.OrderByDescending(p => p.DataHora).ToListAsync();
+            var pressoes = await _context.Pressao
+                .OrderByDescending(p => p.DataHora)
+                .ToListAsync();
             return View(pressoes);
         }
 
@@ -177,19 +179,12 @@ namespace ControlePressao.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            try
+            var pressao = await _context.Pressao.FindAsync(id);
+            if (pressao != null)
             {
-                var pressao = await _context.Pressao.FindAsync(id);
-                if (pressao != null)
-                {
-                    _context.Pressao.Remove(pressao);
-                    await _context.SaveChangesAsync();
-                    TempData["Success"] = "Medição de pressão excluída com sucesso!";
-                }
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "Erro ao excluir a medição: " + ex.Message;
+                _context.Pressao.Remove(pressao);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Medição de pressão excluída com sucesso!";
             }
 
             return RedirectToAction(nameof(Index));

@@ -4,6 +4,20 @@
     ViewData["Title"] = "Nova Medição de Glicose";
 }
 
+<!-- Debug Info -->
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <div class="alert alert-info">
+        <strong>Debug:</strong> Usuário autenticado: @User.Identity.Name (ID: @User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        <strong>Debug:</strong> Usuário NÃO autenticado!
+    </div>
+}
+
 <div class="row">
     <div class="col-md-8 mx-auto">
         <div class="card">
@@ -13,7 +27,8 @@
                 </h3>
             </div>
             <div class="card-body">
-                <form asp-action="Create">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
                         <i class="fas fa-exclamation-triangle"></i> Corrija os erros abaixo:
                     </div>
@@ -48,9 +63,9 @@
                                 </label>
                                 <select asp-for="Periodo" class="form-select">
                                     <option value="">Selecione o período do teste</option>
-                                    <option value="@ControlePressao.Models.PeriodoTeste.Jejum">Jejum</option>
-                                    <option value="@ControlePressao.Models.PeriodoTeste.PosRefeicao">Pós-refeição</option>
-                                    <option value="@ControlePressao.Models.PeriodoTeste.Casual">Casual</option>
+                                    <option value="0">Jejum</option>
+                                    <option value="1">Pós-refeição</option>
+                                    <option value="2">Casual</option>
                                 </select>
                                 <span asp-validation-for="Periodo" class="text-danger"></span>
                                 <div class="form-text">Selecione quando foi feita a medição</div>

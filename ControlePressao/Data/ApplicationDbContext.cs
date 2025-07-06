@@ -1,4 +1,3 @@
-
 using ControlePressao.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +9,14 @@ namespace ControlePressao.Data
         {
         }
 
-        public DbSet<Pressao> Pressao { get; set; }
-        public DbSet<Glicose> Glicose { get; set; }
+        public required DbSet<Pressao> Pressao { get; set; }
+        public required DbSet<Glicose> Glicose { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            // Configurações específicas das entidades (removidas as configurações de relacionamento com Usuario)
+        }
     }
 }

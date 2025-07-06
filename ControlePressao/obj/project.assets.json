@@ -6567,11 +6567,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Rafael\\OneDrive\\Projetos ASP NET\\ControlePressao\\ControlePressao\\ControlePressao.csproj",
+      "projectUniqueName": "c:\\Users\\Rafael\\OneDrive\\Projetos ASP NET\\ControlePressao\\ControlePressao\\ControlePressao.csproj",
       "projectName": "ControlePressao",
-      "projectPath": "C:\\Users\\Rafael\\OneDrive\\Projetos ASP NET\\ControlePressao\\ControlePressao\\ControlePressao.csproj",
+      "projectPath": "c:\\Users\\Rafael\\OneDrive\\Projetos ASP NET\\ControlePressao\\ControlePressao\\ControlePressao.csproj",
       "packagesPath": "C:\\Users\\Rafael\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Rafael\\OneDrive\\Projetos ASP NET\\ControlePressao\\ControlePressao\\obj\\",
+      "outputPath": "c:\\Users\\Rafael\\OneDrive\\Projetos ASP NET\\ControlePressao\\ControlePressao\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

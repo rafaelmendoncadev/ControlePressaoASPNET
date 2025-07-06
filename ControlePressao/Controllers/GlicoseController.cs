@@ -22,7 +22,9 @@ namespace ControlePressao.Controllers
         // GET: Glicose
         public async Task<IActionResult> Index()
         {
-            var glicoses = await _context.Glicose.OrderByDescending(g => g.DataHora).ToListAsync();
+            var glicoses = await _context.Glicose
+                .OrderByDescending(g => g.DataHora)
+                .ToListAsync();
             return View(glicoses);
         }
 
@@ -98,15 +100,18 @@ namespace ControlePressao.Controllers
         }
 
         // POST: Glicose/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DataHora,Valor")] Glicose glicose)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DataHora,Valor,Periodo,Observacoes")] Glicose glicose)
         {
             if (id != glicose.Id)
             {
                 return NotFound();
+            }
+
+            if (glicose.DataHora > DateTime.Now)
+            {
+                ModelState.AddModelError("DataHora", "A data e hora não podem ser futuras");
             }
 
             if (ModelState.IsValid)
@@ -115,6 +120,7 @@ namespace ControlePressao.Controllers
                 {
                     _context.Update(glicose);
                     await _context.SaveChangesAsync();
+                    TempData["Success"] = "Medição de glicose atualizada com sucesso!";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -126,6 +132,11 @@ namespace ControlePressao.Controllers
                     {
                         throw;
                     }
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Erro ao atualizar os dados: " + ex.Message);
+                    return View(glicose);
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -159,9 +170,10 @@ namespace ControlePressao.Controllers
             if (glicose != null)
             {
                 _context.Glicose.Remove(glicose);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Medição de glicose excluída com sucesso!";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
