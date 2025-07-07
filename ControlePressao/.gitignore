@@ -1,0 +1,31 @@
+## Ignore Visual Studio temporary files, build results, and generated files
+[Bb]in/
+[Oo]bj/
+[Aa]pp.db
+appsettings.Production.json
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore Visual Studio Code files
+.vscode/
+
+# Ignore other files
+*.dbmdl
+*.jfm
+*~
+
+# Ignore publish profiles
+*.pubxml
+*.publishproj
+
+# Ignore Resharper files
+_ReSharper*/
+*.[Rr]esharper
+*.DotSettings.user
+
+# Ignore Rider files
+.idea/
