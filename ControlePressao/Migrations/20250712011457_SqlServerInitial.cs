@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ControlePressao.Migrations
 {
     /// <inheritdoc />
-    public partial class Net8Initial : Migration
+    public partial class SqlServerInitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,15 +15,15 @@ namespace ControlePressao.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nome = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Email = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Senha = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
-                    DataCadastro = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    DataNascimento = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Telefone = table.Column<string>(type: "TEXT", maxLength: 15, nullable: true),
-                    Ativo = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Senha = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    DataCadastro = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Telefone = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: true),
+                    Ativo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -34,13 +34,13 @@ namespace ControlePressao.Migrations
                 name: "Glicose",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Valor = table.Column<int>(type: "INTEGER", nullable: false),
-                    Periodo = table.Column<int>(type: "INTEGER", nullable: false),
-                    Observacoes = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DataHora = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Valor = table.Column<int>(type: "int", nullable: false),
+                    Periodo = table.Column<int>(type: "int", nullable: false),
+                    Observacoes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,14 +57,14 @@ namespace ControlePressao.Migrations
                 name: "Pressao",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    DataHora = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Sistolica = table.Column<int>(type: "INTEGER", nullable: false),
-                    Diastolica = table.Column<int>(type: "INTEGER", nullable: false),
-                    FrequenciaCardiaca = table.Column<int>(type: "INTEGER", nullable: false),
-                    Observacoes = table.Column<string>(type: "TEXT", maxLength: 500, nullable: true),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DataHora = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Sistolica = table.Column<int>(type: "int", nullable: false),
+                    Diastolica = table.Column<int>(type: "int", nullable: false),
+                    FrequenciaCardiaca = table.Column<int>(type: "int", nullable: false),
+                    Observacoes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

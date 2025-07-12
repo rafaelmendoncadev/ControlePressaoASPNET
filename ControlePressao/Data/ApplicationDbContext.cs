@@ -9,9 +9,9 @@ namespace ControlePressao.Data
         {
         }
 
-        public required DbSet<Pressao> Pressao { get; set; }
-        public required DbSet<Glicose> Glicose { get; set; }
-        public required DbSet<User> Users { get; set; }
+        public DbSet<Pressao> Pressao { get; set; }
+        public DbSet<Glicose> Glicose { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

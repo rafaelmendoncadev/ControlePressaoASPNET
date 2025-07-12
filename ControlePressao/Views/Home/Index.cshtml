@@ -6,8 +6,8 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <h1 class="display-4 text-primary mb-4">
-                <i class="fas fa-heartbeat"></i> Dashboard de Saúde
+            <h1 class="display-4 text-primary mb-4 animate-fade-in-up">
+                <i class="fas fa-heartbeat icon-primary"></i> Dashboard de Saúde
             </h1>
         </div>
     </div>
@@ -17,11 +17,15 @@
     {
         <div class="row mb-4">
             <div class="col-12">
-                <h3>⚠️ Alertas</h3>
+                <h3 class="animate-fade-in-up">
+                    <i class="fas fa-exclamation-triangle icon-warning"></i> Alertas de Saúde
+                </h3>
                 @foreach (var alerta in Model.Alertas)
                 {
-                    <div class="alert @alerta.Classe" role="alert">
-                        <strong>@alerta.Tipo:</strong> @alerta.Mensagem
+                    <div class="alert @alerta.Classe alert-modern animate-slide-in-down" role="alert">
+                        <i class="fas fa-@(alerta.Tipo == "Pressão" ? "heartbeat" : alerta.Tipo == "Glicose" ? "droplet" : "bell") alert-icon"></i>
+                        <div class="alert-title">@alerta.Tipo</div>
+                        @alerta.Mensagem
                         <small class="text-muted float-end">@alerta.DataHora.ToString("dd/MM/yyyy HH:mm")</small>
                     </div>
                 }
@@ -30,54 +34,54 @@
     }
 
     <!-- Estatísticas -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card bg-primary text-white">
-                <div class="card-body">
-                    <h5 class="card-title">📊 Medições de Pressão</h5>
-                    <h2 class="card-text">@Model.Estatisticas.TotalMedicoesPressao</h2>
+    <div class="row mb-4 grid-auto-fit">
+        <div class="col">
+            <div class="card card-primary stat-card animate-fade-in-up hover-lift" style="animation-delay: 0.1s;">
+                <div class="stat-value">@Model.Estatisticas.TotalMedicoesPressao</div>
+                <div class="stat-label">
+                    <i class="fas fa-heartbeat"></i> Medições de Pressão
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-success text-white">
-                <div class="card-body">
-                    <h5 class="card-title">🩸 Medições de Glicose</h5>
-                    <h2 class="card-text">@Model.Estatisticas.TotalMedicoesGlicose</h2>
+        <div class="col">
+            <div class="card card-success stat-card animate-fade-in-up hover-lift" style="animation-delay: 0.2s;">
+                <div class="stat-value">@Model.Estatisticas.TotalMedicoesGlicose</div>
+                <div class="stat-label">
+                    <i class="fas fa-droplet"></i> Medições de Glicose
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-info text-white">
-                <div class="card-body">
-                    <h5 class="card-title">💓 Pressão Média</h5>
-                    <h4 class="card-text">
-                        @if (Model.Estatisticas.TotalMedicoesPressao > 0)
-                        {
-                            <text>@Model.Estatisticas.PressaoSistolicaMedia.ToString("F0")/@Model.Estatisticas.PressaoDiastolicaMedia.ToString("F0")</text>
-                        }
-                        else
-                        {
-                            <text>--/--</text>
-                        }
-                    </h4>
+        <div class="col">
+            <div class="card card-info stat-card animate-fade-in-up hover-lift" style="animation-delay: 0.3s;">
+                <div class="stat-value">
+                    @if (Model.Estatisticas.TotalMedicoesPressao > 0)
+                    {
+                        <text>@Model.Estatisticas.PressaoSistolicaMedia.ToString("F0")/@Model.Estatisticas.PressaoDiastolicaMedia.ToString("F0")</text>
+                    }
+                    else
+                    {
+                        <text>--/--</text>
+                    }
+                </div>
+                <div class="stat-label">
+                    <i class="fas fa-chart-line"></i> Pressão Média
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card bg-warning text-white">
-                <div class="card-body">
-                    <h5 class="card-title">🍯 Glicose Média</h5>
-                    <h4 class="card-text">
-                        @if (Model.Estatisticas.TotalMedicoesGlicose > 0)
-                        {
-                            <text>@Model.Estatisticas.GlicoseMedia.ToString("F0") mg/dL</text>
-                        }
-                        else
-                        {
-                            <text>-- mg/dL</text>
-                        }
-                    </h4>
+        <div class="col">
+            <div class="card card-warning stat-card animate-fade-in-up hover-lift" style="animation-delay: 0.4s;">
+                <div class="stat-value">
+                    @if (Model.Estatisticas.TotalMedicoesGlicose > 0)
+                    {
+                        <text>@Model.Estatisticas.GlicoseMedia.ToString("F0")</text>
+                    }
+                    else
+                    {
+                        <text>--</text>
+                    }
+                </div>
+                <div class="stat-label">
+                    <i class="fas fa-chart-area"></i> Glicose Média (mg/dL)
                 </div>
             </div>
         </div>
@@ -86,20 +90,103 @@
     <!-- Ações Rápidas -->
     <div class="row mb-4">
         <div class="col-12">
-            <h3>🚀 Ações Rápidas</h3>
-            <div class="d-flex gap-2 flex-wrap">
-                <a href="@Url.Action("Create", "Pressao")" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Nova Medição de Pressão
+            <h3 class="animate-fade-in-up">
+                <i class="fas fa-bolt icon-primary"></i> Ações Rápidas
+            </h3>
+            <div class="d-flex gap-3 flex-wrap animate-slide-in-right">
+                <a href="@Url.Action("Create", "Pressao")" class="btn btn-primary btn-with-icon hover-lift">
+                    <i class="fas fa-plus-circle"></i> Nova Medição de Pressão
                 </a>
-                <a href="@Url.Action("Create", "Glicose")" class="btn btn-success">
-                    <i class="fas fa-plus"></i> Nova Medição de Glicose
+                <a href="@Url.Action("Create", "Glicose")" class="btn btn-success btn-with-icon hover-lift">
+                    <i class="fas fa-plus-circle"></i> Nova Medição de Glicose
                 </a>
-                <a href="@Url.Action("Index", "Pressao")" class="btn btn-outline-primary">
-                    <i class="fas fa-list"></i> Ver Todas as Pressões
+                <a href="@Url.Action("Index", "Pressao")" class="btn btn-outline-primary btn-with-icon hover-lift">
+                    <i class="fas fa-chart-line"></i> Ver Todas as Pressões
                 </a>
-                <a href="@Url.Action("Index", "Glicose")" class="btn btn-outline-success">
-                    <i class="fas fa-list"></i> Ver Todas as Glicoses
+                <a href="@Url.Action("Index", "Glicose")" class="btn btn-outline-success btn-with-icon hover-lift">
+                    <i class="fas fa-chart-area"></i> Ver Todas as Glicoses
                 </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Gráficos Interativos -->
+    <div class="row mb-section">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="animate-fade-in-up">
+                    <i class="fas fa-chart-line icon-primary"></i> Análises Visuais
+                </h3>
+                <div class="btn-group btn-group-sm animate-slide-in-right" role="group">
+                    <button type="button" class="btn btn-outline-primary active" data-filter="7">
+                        <i class="fas fa-calendar-week"></i> 7 dias
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="30">
+                        <i class="fas fa-calendar-alt"></i> 30 dias
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="90">
+                        <i class="fas fa-calendar"></i> 90 dias
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" data-filter="365">
+                        <i class="fas fa-calendar-check"></i> 1 ano
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos Principais -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card card-gradient animate-fade-in-up hover-lift" style="animation-delay: 0.7s;">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 btn-with-icon">
+                        <i class="fas fa-heartbeat icon-danger"></i> Tendência da Pressão Arterial
+                    </h5>
+                </div>
+                <div class="card-body" style="height: 400px;">
+                    <canvas id="pressureChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card card-gradient animate-fade-in-up hover-lift" style="animation-delay: 0.8s;">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 btn-with-icon">
+                        <i class="fas fa-chart-pie icon-info"></i> Distribuição
+                    </h5>
+                </div>
+                <div class="card-body" style="height: 400px;">
+                    <canvas id="healthSummaryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos Secundários -->
+    <div class="row mb-4">
+        <div class="col-lg-6">
+            <div class="card card-gradient animate-fade-in-up hover-lift" style="animation-delay: 0.9s;">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 btn-with-icon">
+                        <i class="fas fa-droplet icon-warning"></i> Tendência da Glicose
+                    </h5>
+                </div>
+                <div class="card-body" style="height: 300px;">
+                    <canvas id="glucoseChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card card-gradient animate-fade-in-up hover-lift" style="animation-delay: 1.0s;">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 btn-with-icon">
+                        <i class="fas fa-chart-bar icon-success"></i> Comparação Mensal
+                    </h5>
+                </div>
+                <div class="card-body" style="height: 300px;">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
@@ -108,32 +195,34 @@
     <div class="row">
         <!-- Últimas Pressões -->
         <div class="col-md-6">
-            <div class="card">
+            <div class="card card-gradient animate-fade-in-up hover-lift" style="animation-delay: 0.5s;">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">🩺 Últimas Medições de Pressão</h5>
+                    <h5 class="card-title mb-0 btn-with-icon">
+                        <i class="fas fa-heartbeat icon-danger"></i> Últimas Medições de Pressão
+                    </h5>
                 </div>
                 <div class="card-body">
                     @if (Model.UltimasPressoes.Any())
                     {
                         <div class="table-responsive">
-                            <table class="table table-sm">
+                            <table class="table table-modern table-sm">
                                 <thead>
                                     <tr>
-                                        <th>Data</th>
-                                        <th>Pressão</th>
-                                        <th>BPM</th>
-                                        <th>Status</th>
+                                        <th><i class="fas fa-calendar icon-info"></i> Data</th>
+                                        <th><i class="fas fa-heartbeat icon-danger"></i> Pressão</th>
+                                        <th><i class="fas fa-heart icon-primary"></i> BPM</th>
+                                        <th><i class="fas fa-shield-alt icon-success"></i> Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var pressao in Model.UltimasPressoes.Take(5))
                                     {
-                                        <tr>
+                                        <tr class="transition-all">
                                             <td>@pressao.DataHora.ToString("dd/MM HH:mm")</td>
-                                            <td>@pressao.Sistolica/@pressao.Diastolica</td>
+                                            <td><strong>@pressao.Sistolica/@pressao.Diastolica</strong></td>
                                             <td>@pressao.FrequenciaCardiaca</td>
                                             <td>
-                                                <span class="badge bg-@(pressao.ClasseRisco == "Baixo" ? "success" : 
+                                                <span class="badge badge-modern bg-@(pressao.ClasseRisco == "Baixo" ? "success" : 
                                                     pressao.ClasseRisco == "Moderado" ? "warning" : "danger")">
                                                     @pressao.ClassificacaoPressao
                                                 </span>
@@ -146,7 +235,13 @@
                     }
                     else
                     {
-                        <p class="text-muted">Nenhuma medição de pressão registrada.</p>
+                        <div class="text-center py-4">
+                            <i class="fas fa-heartbeat text-muted fa-3x mb-3"></i>
+                            <p class="text-muted">Nenhuma medição de pressão registrada.</p>
+                            <a href="@Url.Action("Create", "Pressao")" class="btn btn-primary btn-with-icon">
+                                <i class="fas fa-plus"></i> Primeira Medição
+                            </a>
+                        </div>
                     }
                 </div>
             </div>
@@ -154,32 +249,34 @@
 
         <!-- Últimas Glicoses -->
         <div class="col-md-6">
-            <div class="card">
+            <div class="card card-gradient animate-fade-in-up hover-lift" style="animation-delay: 0.6s;">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">🍯 Últimas Medições de Glicose</h5>
+                    <h5 class="card-title mb-0 btn-with-icon">
+                        <i class="fas fa-droplet icon-warning"></i> Últimas Medições de Glicose
+                    </h5>
                 </div>
                 <div class="card-body">
                     @if (Model.UltimasGlicoses.Any())
                     {
                         <div class="table-responsive">
-                            <table class="table table-sm">
+                            <table class="table table-modern table-sm">
                                 <thead>
                                     <tr>
-                                        <th>Data</th>
-                                        <th>Valor</th>
-                                        <th>Período</th>
-                                        <th>Status</th>
+                                        <th><i class="fas fa-calendar icon-info"></i> Data</th>
+                                        <th><i class="fas fa-droplet icon-warning"></i> Valor</th>
+                                        <th><i class="fas fa-clock icon-primary"></i> Período</th>
+                                        <th><i class="fas fa-shield-alt icon-success"></i> Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var glicose in Model.UltimasGlicoses.Take(5))
                                     {
-                                        <tr>
+                                        <tr class="transition-all">
                                             <td>@glicose.DataHora.ToString("dd/MM HH:mm")</td>
-                                            <td>@glicose.Valor mg/dL</td>
+                                            <td><strong>@glicose.Valor mg/dL</strong></td>
                                             <td>@glicose.Periodo.ToString()</td>
                                             <td>
-                                                <span class="badge bg-@(glicose.ClasseRisco == "Baixo" ? "success" : 
+                                                <span class="badge badge-modern bg-@(glicose.ClasseRisco == "Baixo" ? "success" : 
                                                     glicose.ClasseRisco == "Moderado" ? "warning" : "danger")">
                                                     @glicose.ClassificacaoGlicose
                                                 </span>
@@ -192,7 +289,13 @@
                     }
                     else
                     {
-                        <p class="text-muted">Nenhuma medição de glicose registrada.</p>
+                        <div class="text-center py-4">
+                            <i class="fas fa-droplet text-muted fa-3x mb-3"></i>
+                            <p class="text-muted">Nenhuma medição de glicose registrada.</p>
+                            <a href="@Url.Action("Create", "Glicose")" class="btn btn-success btn-with-icon">
+                                <i class="fas fa-plus"></i> Primeira Medição
+                            </a>
+                        </div>
                     }
                 </div>
             </div>
@@ -204,10 +307,106 @@
 {
     <div class="row mt-4">
         <div class="col-12">
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i> 
-                <strong>Última medição:</strong> @Model.Estatisticas.UltimaMedicao.Value.ToString("dd/MM/yyyy HH:mm")
+            <div class="alert alert-info alert-modern animate-fade-in">
+                <i class="fas fa-clock alert-icon"></i>
+                <div class="alert-title">Última Atividade</div>
+                Última medição registrada em @Model.Estatisticas.UltimaMedicao.Value.ToString("dd/MM/yyyy 'às' HH:mm")
             </div>
         </div>
     </div>
+}
+
+@section Scripts {
+    <script>
+        // Dados dos gráficos baseados no modelo C#
+        window.chartData = {
+            pressure: [
+                @foreach (var pressao in Model.UltimasPressoes.OrderBy(p => p.DataHora))
+                {
+                    <text>{
+                        date: '@pressao.DataHora.ToString("yyyy-MM-ddTHH:mm:ss")',
+                        systolic: @pressao.Sistolica,
+                        diastolic: @pressao.Diastolica,
+                        heartRate: @pressao.FrequenciaCardiaca
+                    },</text>
+                }
+            ],
+            glucose: [
+                @foreach (var glicose in Model.UltimasGlicoses.OrderBy(g => g.DataHora))
+                {
+                    <text>{
+                        date: '@glicose.DataHora.ToString("yyyy-MM-ddTHH:mm:ss")',
+                        value: @glicose.Valor,
+                        period: '@glicose.Periodo.ToString()'
+                    },</text>
+                }
+            ],
+            monthly: [
+                @{
+                    var monthlyData = Model.UltimasPressoes
+                        .Where(p => p.DataHora >= DateTime.Now.AddMonths(-12))
+                        .GroupBy(p => new { Year = p.DataHora.Year, Month = p.DataHora.Month })
+                        .Select(g => new {
+                            MonthYear = g.Key,
+                            AvgSystolic = g.Average(p => p.Sistolica),
+                            Count = g.Count()
+                        })
+                        .OrderBy(x => x.MonthYear.Year).ThenBy(x => x.MonthYear.Month)
+                        .Take(6)
+                        .ToList();
+
+                    var glucoseMonthlyData = Model.UltimasGlicoses
+                        .Where(g => g.DataHora >= DateTime.Now.AddMonths(-12))
+                        .GroupBy(g => new { Year = g.DataHora.Year, Month = g.DataHora.Month })
+                        .Select(g => new {
+                            MonthYear = g.Key,
+                            AvgGlucose = g.Average(p => p.Valor),
+                            Count = g.Count()
+                        })
+                        .OrderBy(x => x.MonthYear.Year).ThenBy(x => x.MonthYear.Month)
+                        .Take(6)
+                        .ToList();
+                }
+                @for (int i = 0; i < Math.Max(monthlyData.Count, glucoseMonthlyData.Count); i++)
+                {
+                    var pressureData = i < monthlyData.Count ? monthlyData[i] : null;
+                    var glucoseData = i < glucoseMonthlyData.Count ? glucoseMonthlyData[i] : null;
+                    var monthName = "";
+                    
+                    if (pressureData != null)
+                    {
+                        monthName = new DateTime(pressureData.MonthYear.Year, pressureData.MonthYear.Month, 1).ToString("MMM/yy");
+                    }
+                    else if (glucoseData != null)
+                    {
+                        monthName = new DateTime(glucoseData.MonthYear.Year, glucoseData.MonthYear.Month, 1).ToString("MMM/yy");
+                    }
+                    
+                    <text>{
+                        month: '@monthName',
+                        avgSystolic: @(pressureData?.AvgSystolic.ToString("F1") ?? "null"),
+                        avgGlucose: @(glucoseData?.AvgGlucose.ToString("F1") ?? "null")
+                    },</text>
+                }
+            ],
+            summary: {
+                @{
+                    var pressaoClassificacoes = Model.UltimasPressoes.GroupBy(p => p.ClassificacaoPressao).ToDictionary(g => g.Key, g => g.Count());
+                    var total = Model.UltimasPressoes.Count();
+                }
+                optimal: @(pressaoClassificacoes.GetValueOrDefault("Ótima", 0)),
+                normal: @(pressaoClassificacoes.GetValueOrDefault("Normal", 0)),
+                borderline: @(pressaoClassificacoes.GetValueOrDefault("Limítrofe", 0)),
+                hypertension: @(pressaoClassificacoes.GetValueOrDefault("Hipertensão Leve", 0) + 
+                                 pressaoClassificacoes.GetValueOrDefault("Hipertensão Moderada", 0) + 
+                                 pressaoClassificacoes.GetValueOrDefault("Hipertensão Grave", 0))
+            }
+        };
+
+        // Backup dos dados originais para filtros
+        window.originalChartData = JSON.parse(JSON.stringify(window.chartData));
+
+        // Log para debug
+        console.log('📊 Dados dos gráficos carregados:', window.chartData);
+    </script>
 }
