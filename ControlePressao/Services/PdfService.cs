@@ -12,21 +12,70 @@ namespace ControlePressao.Services
 {
     public class PdfService
     {
-        private readonly PdfFont _titleFont;
-        private readonly PdfFont _subtitleFont;
-        private readonly PdfFont _normalFont;
-        private readonly PdfFont _boldFont;
-        private readonly PdfFont _smallFont;
+        private readonly PdfFont? _titleFont;
+        private readonly PdfFont? _subtitleFont;
+        private readonly PdfFont? _normalFont;
+        private readonly PdfFont? _boldFont;
+        private readonly PdfFont? _smallFont;
 
         public PdfService()
         {
-            // Configuração das fontes
-            _titleFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
-            _subtitleFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
-            _normalFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
-            _boldFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
-            _smallFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+            try
+            {
+                // Configuração das fontes com tratamento de erro
+                _titleFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+                _subtitleFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+                _normalFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+                _boldFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+                _smallFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+            }
+            catch (Exception ex)
+            {
+                // Log do erro e fallback para fontes padrão
+                Console.WriteLine($"Erro ao inicializar fontes PDF: {ex.Message}");
+                
+                // Tentar novamente com configuração mais simples
+                try
+                {
+                    _titleFont = PdfFontFactory.CreateFont();
+                    _subtitleFont = PdfFontFactory.CreateFont();
+                    _normalFont = PdfFontFactory.CreateFont();
+                    _boldFont = PdfFontFactory.CreateFont();
+                    _smallFont = PdfFontFactory.CreateFont();
+                }
+                catch
+                {
+                    // Se ainda falhar, usar null e verificar antes de usar
+                    _titleFont = null;
+                    _subtitleFont = null;
+                    _normalFont = null;
+                    _boldFont = null;
+                    _smallFont = null;
+                }
+            }
         }
+
+        // Métodos auxiliares para obter fontes seguras
+        private PdfFont GetSafeFont(PdfFont? font, bool bold = false)
+        {
+            if (font != null) return font;
+            
+            try
+            {
+                return bold ? PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD) 
+                           : PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+            }
+            catch
+            {
+                return PdfFontFactory.CreateFont();
+            }
+        }
+
+        private PdfFont GetTitleFont() => GetSafeFont(_titleFont, true);
+        private PdfFont GetSubtitleFont() => GetSafeFont(_subtitleFont, true);
+        private PdfFont GetNormalFont() => GetSafeFont(_normalFont, false);
+        private PdfFont GetBoldFont() => GetSafeFont(_boldFont, true);
+        private PdfFont GetSmallFont() => GetSafeFont(_smallFont, false);
 
         public byte[] GerarRelatorioPdf(RelatorioResultViewModel relatorio)
         {
@@ -117,7 +166,7 @@ namespace ControlePressao.Services
             // Logo/Título
             var cellTitulo = new Cell()
                 .Add(new Paragraph("RELATÓRIO DE SAÚDE\nCONTROLE DE PRESSÃO E GLICOSE")
-                    .SetFont(_titleFont)
+                    .SetFont(GetTitleFont())
                     .SetFontSize(18))
                 .SetBorder(iText.Layout.Borders.Border.NO_BORDER)
                 .SetTextAlignment(TextAlignment.LEFT)
@@ -127,7 +176,7 @@ namespace ControlePressao.Services
             // Data de geração
             var cellData = new Cell()
                 .Add(new Paragraph($"Gerado em:\n{DateTime.Now:dd/MM/yyyy HH:mm}")
-                    .SetFont(_normalFont)
+                    .SetFont(GetNormalFont())
                     .SetFontSize(10))
                 .SetBorder(iText.Layout.Borders.Border.NO_BORDER)
                 .SetTextAlignment(TextAlignment.RIGHT)
@@ -144,7 +193,7 @@ namespace ControlePressao.Services
         private void AdicionarDadosPaciente(Document document, RelatorioResultViewModel relatorio)
         {
             document.Add(new Paragraph("DADOS DO PACIENTE")
-                .SetFont(_subtitleFont)
+                .SetFont(GetSubtitleFont())
                 .SetFontSize(14));
             document.Add(new Paragraph(" "));
 
@@ -168,7 +217,7 @@ namespace ControlePressao.Services
         private void AdicionarPeriodoRelatorio(Document document, RelatorioResultViewModel relatorio)
         {
             var paragrafo = new Paragraph($"PERÍODO ANALISADO: {relatorio.DataInicial:dd/MM/yyyy} a {relatorio.DataFinal:dd/MM/yyyy}")
-                .SetFont(_boldFont)
+                .SetFont(GetBoldFont())
                 .SetFontSize(10)
                 .SetTextAlignment(TextAlignment.CENTER)
                 .SetMarginBottom(10);
@@ -179,13 +228,13 @@ namespace ControlePressao.Services
         {
             document.Add(new Paragraph(" "));
             document.Add(new Paragraph("VALORES DE REFERÊNCIA")
-                .SetFont(_subtitleFont)
+                .SetFont(GetSubtitleFont())
                 .SetFontSize(14));
             document.Add(new Paragraph(" "));
 
             // Tabela de Pressão Arterial
             document.Add(new Paragraph("Pressão Arterial (mmHg):")
-                .SetFont(_boldFont)
+                .SetFont(GetBoldFont())
                 .SetFontSize(10));
             document.Add(new Paragraph(" "));
             
@@ -209,7 +258,7 @@ namespace ControlePressao.Services
 
             // Tabela de Glicose
             document.Add(new Paragraph("Glicose (mg/dL):")
-                .SetFont(_boldFont)
+                .SetFont(GetBoldFont())
                 .SetFontSize(10));
             document.Add(new Paragraph(" "));
             
@@ -235,7 +284,7 @@ namespace ControlePressao.Services
 
             // Tabela de IMC
             document.Add(new Paragraph("Índice de Massa Corporal (IMC):")
-                .SetFont(_boldFont)
+                .SetFont(GetBoldFont())
                 .SetFontSize(10));
             document.Add(new Paragraph(" "));
             
@@ -262,7 +311,7 @@ namespace ControlePressao.Services
         {
             document.Add(new Paragraph(" "));
             document.Add(new Paragraph("ANÁLISE DA PRESSÃO ARTERIAL")
-                .SetFont(_subtitleFont)
+                .SetFont(GetSubtitleFont())
                 .SetFontSize(14));
             document.Add(new Paragraph(" "));
 
@@ -282,7 +331,7 @@ namespace ControlePressao.Services
 
             // Tendência
             document.Add(new Paragraph($"Tendência: {analise.TendenciaGeral}")
-                .SetFont(_boldFont)
+                .SetFont(GetBoldFont())
                 .SetFontSize(10));
             document.Add(new Paragraph(" "));
 
@@ -290,7 +339,7 @@ namespace ControlePressao.Services
             if (pressoes.Any())
             {
                 document.Add(new Paragraph("Histórico Recente (últimas medições):")
-                    .SetFont(_boldFont)
+                    .SetFont(GetBoldFont())
                     .SetFontSize(10));
                 document.Add(new Paragraph(" "));
                 
@@ -320,7 +369,7 @@ namespace ControlePressao.Services
         {
             document.Add(new Paragraph(" "));
             document.Add(new Paragraph("ANÁLISE DA GLICOSE")
-                .SetFont(_subtitleFont)
+                .SetFont(GetSubtitleFont())
                 .SetFontSize(14));
             document.Add(new Paragraph(" "));
 
@@ -344,7 +393,7 @@ namespace ControlePressao.Services
             if (glicoses.Any())
             {
                 document.Add(new Paragraph("Histórico Recente (últimas medições):")
-                    .SetFont(_boldFont)
+                    .SetFont(GetBoldFont())
                     .SetFontSize(10));
                 document.Add(new Paragraph(" "));
                 
@@ -374,7 +423,7 @@ namespace ControlePressao.Services
         {
             document.Add(new Paragraph(" "));
             document.Add(new Paragraph("ANÁLISE DE PESO E IMC")
-                .SetFont(_subtitleFont)
+                .SetFont(GetSubtitleFont())
                 .SetFontSize(14));
             document.Add(new Paragraph(" "));
 
@@ -395,10 +444,10 @@ namespace ControlePressao.Services
 
             // Status e tendência
             document.Add(new Paragraph($"Status: {analise.StatusPesoGeral}")
-                .SetFont(_boldFont)
+                .SetFont(GetBoldFont())
                 .SetFontSize(10));
             document.Add(new Paragraph($"Tendência: {analise.TendenciaPeso}")
-                .SetFont(_boldFont)
+                .SetFont(GetBoldFont())
                 .SetFontSize(10));
             document.Add(new Paragraph(" "));
 
@@ -406,7 +455,7 @@ namespace ControlePressao.Services
             if (pesos.Any())
             {
                 document.Add(new Paragraph("Histórico Recente (últimas medições):")
-                    .SetFont(_boldFont)
+                    .SetFont(GetBoldFont())
                     .SetFontSize(10));
                 document.Add(new Paragraph(" "));
                 
@@ -440,12 +489,12 @@ namespace ControlePressao.Services
             {
                 document.Add(new Paragraph(" "));
                 document.Add(new Paragraph("OBSERVAÇÕES MÉDICAS")
-                    .SetFont(_subtitleFont)
+                    .SetFont(GetSubtitleFont())
                     .SetFontSize(14));
                 document.Add(new Paragraph(" "));
 
                 var paragrafo = new Paragraph(observacoes)
-                    .SetFont(_normalFont)
+                    .SetFont(GetNormalFont())
                     .SetFontSize(10)
                     .SetTextAlignment(TextAlignment.JUSTIFIED)
                     .SetMarginBottom(10);
@@ -458,14 +507,14 @@ namespace ControlePressao.Services
         {
             document.Add(new Paragraph(" "));
             document.Add(new Paragraph("ALERTAS CRÍTICOS")
-                .SetFont(_subtitleFont)
+                .SetFont(GetSubtitleFont())
                 .SetFontSize(14));
             document.Add(new Paragraph(" "));
 
             foreach (var alerta in alertas)
             {
                 var paragrafo = new Paragraph($"• {alerta}")
-                    .SetFont(_normalFont)
+                    .SetFont(GetNormalFont())
                     .SetFontSize(10)
                     .SetFontColor(ColorConstants.RED)
                     .SetMarginBottom(5);
@@ -478,12 +527,12 @@ namespace ControlePressao.Services
         {
             document.Add(new Paragraph(" "));
             document.Add(new Paragraph("RECOMENDAÇÕES GERAIS")
-                .SetFont(_subtitleFont)
+                .SetFont(GetSubtitleFont())
                 .SetFontSize(14));
             document.Add(new Paragraph(" "));
 
             var paragrafo = new Paragraph(recomendacoes)
-                .SetFont(_normalFont)
+                .SetFont(GetNormalFont())
                 .SetFontSize(10)
                 .SetTextAlignment(TextAlignment.JUSTIFIED)
                 .SetMarginBottom(10);
@@ -496,12 +545,12 @@ namespace ControlePressao.Services
             document.Add(new Paragraph(" "));
             document.Add(new Paragraph(" "));
             document.Add(new Paragraph("IMPORTANTE:")
-                .SetFont(_boldFont)
+                .SetFont(GetBoldFont())
                 .SetFontSize(10));
             document.Add(new Paragraph(" "));
             
             var paragrafo = new Paragraph(disclaimer)
-                .SetFont(_normalFont)
+                .SetFont(GetNormalFont())
                 .SetFontSize(9)
                 .SetFontColor(ColorConstants.DARK_GRAY)
                 .SetTextAlignment(TextAlignment.JUSTIFIED)
@@ -514,7 +563,7 @@ namespace ControlePressao.Services
         private void AdicionarRodape(Document document)
         {
             var rodape = new Paragraph($"Relatório gerado automaticamente em {DateTime.Now:dd/MM/yyyy HH:mm} - ControlePressao System")
-                .SetFont(_smallFont)
+                .SetFont(GetSmallFont())
                 .SetFontSize(8)
                 .SetTextAlignment(TextAlignment.CENTER)
                 .SetMarginTop(10);
@@ -525,11 +574,11 @@ namespace ControlePressao.Services
         private void AdicionarCelulaDados(Table table, string label, string value)
         {
             table.AddCell(new Cell()
-                .Add(new Paragraph(label).SetFont(_boldFont).SetFontSize(10))
+                .Add(new Paragraph(label).SetFont(GetBoldFont()).SetFontSize(10))
                 .SetPadding(5)
                 .SetBorder(iText.Layout.Borders.Border.NO_BORDER));
             table.AddCell(new Cell()
-                .Add(new Paragraph(value).SetFont(_normalFont).SetFontSize(10))
+                .Add(new Paragraph(value).SetFont(GetNormalFont()).SetFontSize(10))
                 .SetPadding(5)
                 .SetBorder(iText.Layout.Borders.Border.NO_BORDER));
         }
@@ -537,7 +586,7 @@ namespace ControlePressao.Services
         private void AdicionarCelulaCabecalho(Table table, string text)
         {
             var cell = new Cell()
-                .Add(new Paragraph(text).SetFont(_boldFont).SetFontSize(10))
+                .Add(new Paragraph(text).SetFont(GetBoldFont()).SetFontSize(10))
                 .SetBackgroundColor(ColorConstants.LIGHT_GRAY)
                 .SetPadding(5)
                 .SetTextAlignment(TextAlignment.CENTER);
@@ -547,7 +596,7 @@ namespace ControlePressao.Services
         private void AdicionarCelulaTabela(Table table, string text)
         {
             var cell = new Cell()
-                .Add(new Paragraph(text).SetFont(_normalFont).SetFontSize(10))
+                .Add(new Paragraph(text).SetFont(GetNormalFont()).SetFontSize(10))
                 .SetPadding(5)
                 .SetTextAlignment(TextAlignment.CENTER);
             table.AddCell(cell);

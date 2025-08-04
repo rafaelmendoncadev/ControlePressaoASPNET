@@ -2,6 +2,24 @@
 
 ## Status: PRONTO PARA DEPLOY ✅
 
+### 🔧 Erro de Injeção de Dependência Resolvido (04/08/2025)
+
+**Problema**: `Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance` falhando no Railway.
+
+**Causa Identificada**: PdfService com inicialização de fontes iText7 falhando em ambiente Railway.
+
+**Solução Implementada**:
+1. **Construtor Robusto**: Adicionado try-catch no construtor do PdfService
+2. **Fallback de Fontes**: Sistema de fallback para fontes padrão se inicialização falhar
+3. **Métodos Seguros**: Criados métodos auxiliares para obter fontes com verificação null
+4. **Campos Nullable**: Declarados campos de fonte como nullable para eliminar warnings
+5. **Tratamento de Erro**: Log de erros e recuperação automática
+
+**Arquivos Modificados**:
+- `Services/PdfService.cs`: Construtor robusto e métodos seguros
+
+**Resultado**: Build limpo sem warnings, serviço resiliente a falhas de inicialização.
+
 ### 📋 Arquivos de Configuração
 
 - ✅ **Dockerfile** - Configurado corretamente
