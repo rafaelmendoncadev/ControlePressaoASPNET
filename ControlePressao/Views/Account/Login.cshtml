@@ -46,21 +46,6 @@
             </button>
         </form>
         
-        <!-- Botão de acesso rápido para teste -->
-        <div class="test-user-section mb-3">
-            <button type="button" class="btn btn-outline-info btn-modern w-100" onclick="fillTestUser()">
-                <i class="fas fa-user-cog me-2"></i>
-                Acesso Rápido - Usuário Teste
-            </button>
-            <small class="text-muted d-block text-center mt-1">
-                Email: teste@teste.com | Senha: 123456
-            </small>
-        </div>
-        
-        <div class="auth-divider">
-            <span>ou</span>
-        </div>
-        
         <div class="auth-footer">
             <p class="text-center mb-0">
                 Não tem uma conta? 
@@ -72,27 +57,4 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        function fillTestUser() {
-            // Preencher os campos com as credenciais do usuário teste
-            document.getElementById('Email').value = 'teste@teste.com';
-            document.getElementById('Password').value = '123456';
-            
-            // Adicionar efeito visual para indicar que os campos foram preenchidos
-            const emailField = document.getElementById('Email');
-            const passwordField = document.getElementById('Password');
-            
-            emailField.classList.add('is-valid');
-            passwordField.classList.add('is-valid');
-            
-            // Remover a classe após alguns segundos
-            setTimeout(() => {
-                emailField.classList.remove('is-valid');
-                passwordField.classList.remove('is-valid');
-            }, 2000);
-            
-            // Focar no botão de submit
-            document.querySelector('button[type="submit"]').focus();
-        }
-    </script>
 }

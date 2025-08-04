@@ -5,6 +5,16 @@ using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Kestrel for Railway deployment
+builder.WebHost.ConfigureKestrel(options =>
+{
+    var port = Environment.GetEnvironmentVariable("PORT");
+    if (!string.IsNullOrEmpty(port))
+    {
+        options.ListenAnyIP(int.Parse(port));
+    }
+});
+
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -56,10 +66,15 @@ using (var scope = app.Services.CreateScope())
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
+    // Remove HSTS for Railway deployment
+    // app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Only use HTTPS redirection in development
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseStaticFiles();
 
 // Usar localização

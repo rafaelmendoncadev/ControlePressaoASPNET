@@ -1,0 +1,15 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "dotnet ControlePressao.dll"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[environments.production]
+variables = { ASPNETCORE_ENVIRONMENT = "Production" }
+
+[environments.production.deploy]
+healthcheckPath = "/"
+healthcheckTimeout = 300

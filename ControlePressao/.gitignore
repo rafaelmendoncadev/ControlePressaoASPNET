@@ -1,8 +1,14 @@
 ## Ignore Visual Studio temporary files, build results, and generated files
 [Bb]in/
 [Oo]bj/
-[Aa]pp.db
-appsettings.Production.json
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# Test files
+test_report*.pdf
 
 # Ignore user-specific files
 *.user
@@ -29,3 +35,18 @@ _ReSharper*/
 
 # Ignore Rider files
 .idea/
+
+# Logs
+logs/
+*.log
+
+# Runtime files
+*.tmp
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node modules (if any)
+node_modules/
