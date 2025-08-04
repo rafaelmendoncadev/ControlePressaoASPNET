@@ -7,8 +7,7 @@
     <PublishSingleFile>false</PublishSingleFile>
     <PublishTrimmed>false</PublishTrimmed>
     <TrimMode>link</TrimMode>
-    <InvariantGlobalization Condition="'$(DOTNET_SYSTEM_GLOBALIZATION_INVARIANT)' != 'true'">false</InvariantGlobalization>
-    <InvariantGlobalization Condition="'$(DOTNET_SYSTEM_GLOBALIZATION_INVARIANT)' == 'true'">true</InvariantGlobalization>
+    <InvariantGlobalization>true</InvariantGlobalization>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <PublishReadyToRun>false</PublishReadyToRun>

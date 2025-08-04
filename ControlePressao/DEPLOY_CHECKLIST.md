@@ -103,15 +103,15 @@
 
 ### Erro ICU (Resolvido - Solução Definitiva)
 - **Problema**: Railway não consegue encontrar bibliotecas ICU mesmo com instalação completa
-- **Solução**: Modo Globalization Invariant ativado para produção
+- **Solução**: InvariantGlobalization=true configurado diretamente
 - **Dockerfile**: 
   - Mantida instalação de ICU para compatibilidade: `libicu-dev`, `libicu72`, `icu-devtools`
   - **DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true** (modo invariant ativado)
   - Variáveis de ambiente: `LC_ALL=C.UTF-8`, `LANG=C.UTF-8`
 - **ControlePressao.csproj**: 
-  - Configuração condicional de `InvariantGlobalization` baseada em variável de ambiente
-  - **Produção**: Modo invariant (sem dependência de ICU)
-  - **Desenvolvimento**: Modo completo com localização pt-BR
+  - `<InvariantGlobalization>true</InvariantGlobalization>` configurado diretamente
+  - **Configuração simplificada**: Modo invariant ativo para todos os ambientes
+  - **Elimina dependências de ICU**: Compatibilidade máxima garantida
 
 ### Erro dotnet restore / MSB4066 (Resolvido)
 - **Problema 1**: Tag `RuntimeHostConfigurationOption` estava incorretamente dentro de `PropertyGroup`
