@@ -99,6 +99,17 @@
 - ✅ **CORREÇÃO ICU**: Adicionado `libicu-dev` no Dockerfile para suporte à globalização
 - ✅ **CORREÇÃO ICU**: Configurado `InvariantGlobalization=false` no projeto
 
+## ✅ Correções de Erros de Deploy
+
+### Erro ICU (Resolvido)
+- **Dockerfile**: Adicionado `libicu-dev` junto com `sqlite3`
+- **ControlePressao.csproj**: Configurado `InvariantGlobalization=false`
+
+### Erro dotnet restore (Resolvido)
+- **Problema**: Tag `RuntimeHostConfigurationOption` estava incorretamente dentro de `PropertyGroup`
+- **Solução**: Movida para `ItemGroup` separado conforme especificação MSBuild
+- **Status**: ✅ `dotnet restore` e `dotnet build` funcionando corretamente
+
 ---
 
 **Status Final: PROJETO PRONTO PARA DEPLOY NO RAILWAY** 🚀

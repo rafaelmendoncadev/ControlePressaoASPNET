@@ -8,13 +8,16 @@
     <PublishTrimmed>false</PublishTrimmed>
     <TrimMode>link</TrimMode>
     <InvariantGlobalization>false</InvariantGlobalization>
-    <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="false" />
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <PublishReadyToRun>false</PublishReadyToRun>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
+
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="false" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="itext7" Version="7.2.5" />
