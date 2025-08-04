@@ -1,4 +1,5 @@
 {
     "appService.preDeployTask": "publish-release",
-    "appService.deploySubpath": "ControlePressao/bin/Release/net8.0/publish"
+    "appService.deploySubpath": "ControlePressao\\bin\\Release\\net8.0\\publish",
+    "appService.defaultWebAppToDeploy": "/subscriptions/12cbffac-2434-4371-bfee-41ca8fdb3611/resourceGroups/appsvc_windows_brazilsouth2/providers/Microsoft.Web/sites/ControlePressao"
 }

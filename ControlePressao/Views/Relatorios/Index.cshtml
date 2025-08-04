@@ -1,0 +1,246 @@
+@model ControlePressao.Models.RelatorioFilterViewModel
+
+@{
+    ViewData["Title"] = "Relatórios de Saúde";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        Relatórios de Saúde
+                    </h4>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    @if (TempData["InfoMessage"] != null)
+                    {
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <i class="fas fa-info-circle me-2"></i>
+                            @TempData["InfoMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <form asp-action="Gerar" method="post" class="needs-validation" novalidate>
+                        <div class="row">
+                            <!-- Filtros de Data -->
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-calendar-alt me-2"></i>
+                                            Período do Relatório
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-3">
+                                                    <label asp-for="DataInicial" class="form-label">
+                                                        <i class="fas fa-calendar-day me-1"></i>
+                                                        @Html.DisplayNameFor(m => m.DataInicial)
+                                                    </label>
+                                                    <input asp-for="DataInicial" class="form-control" type="date" required />
+                                                    <span asp-validation-for="DataInicial" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-3">
+                                                    <label asp-for="DataFinal" class="form-label">
+                                                        <i class="fas fa-calendar-day me-1"></i>
+                                                        @Html.DisplayNameFor(m => m.DataFinal)
+                                                    </label>
+                                                    <input asp-for="DataFinal" class="form-control" type="date" required />
+                                                    <span asp-validation-for="DataFinal" class="text-danger"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="btn-group btn-group-sm w-100" role="group">
+                                                    <button type="button" class="btn btn-outline-secondary" onclick="setDateRange(7)">7 dias</button>
+                                                    <button type="button" class="btn btn-outline-secondary" onclick="setDateRange(30)">30 dias</button>
+                                                    <button type="button" class="btn btn-outline-secondary" onclick="setDateRange(90)">90 dias</button>
+                                                    <button type="button" class="btn btn-outline-secondary" onclick="setDateRange(365)">1 ano</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Configurações do Relatório -->
+                            <div class="col-md-6">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">
+                                            <i class="fas fa-cogs me-2"></i>
+                                            Configurações
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="TipoRelatorio" class="form-label">
+                                                <i class="fas fa-file-medical me-1"></i>
+                                                @Html.DisplayNameFor(m => m.TipoRelatorio)
+                                            </label>
+                                            <select asp-for="TipoRelatorio" class="form-select" asp-items="Html.GetEnumSelectList<TipoRelatorio>()">
+                                            </select>
+                                            <span asp-validation-for="TipoRelatorio" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label asp-for="FormatoExportacao" class="form-label">
+                                                <i class="fas fa-file-export me-1"></i>
+                                                @Html.DisplayNameFor(m => m.FormatoExportacao)
+                                            </label>
+                                            <select asp-for="FormatoExportacao" class="form-select" asp-items="Html.GetEnumSelectList<FormatoExportacao>()">
+                                            </select>
+                                            <span asp-validation-for="FormatoExportacao" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botões de Ação -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                            <!-- Visualizar -->
+                                            <button type="submit" formaction="@Url.Action("Visualizar")" class="btn btn-outline-primary">
+                                                <i class="fas fa-eye me-2"></i>
+                                                Visualizar
+                                            </button>
+                                            
+                                            <!-- Gerar Relatório -->
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-download me-2"></i>
+                                                Gerar Relatório
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Relatórios Rápidos -->
+                    <div class="mt-4">
+                        <h5 class="mb-3">
+                            <i class="fas fa-bolt me-2"></i>
+                            Relatórios Rápidos (últimos 30 dias)
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <a href="@Url.Action("GerarRapido", new { tipo = TipoRelatorio.Pressao, formato = FormatoExportacao.PDF })" class="btn btn-outline-danger w-100">
+                                    <i class="fas fa-heartbeat me-2"></i>
+                                    Pressão Arterial (PDF)
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="@Url.Action("GerarRapido", new { tipo = TipoRelatorio.Glicose, formato = FormatoExportacao.PDF })" class="btn btn-outline-success w-100">
+                                    <i class="fas fa-droplet me-2"></i>
+                                    Glicose (PDF)
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="@Url.Action("GerarRapido", new { tipo = TipoRelatorio.Peso, formato = FormatoExportacao.PDF })" class="btn btn-outline-warning w-100">
+                                    <i class="fas fa-weight me-2"></i>
+                                    Peso e IMC (PDF)
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <a href="@Url.Action("GerarRapido", new { tipo = TipoRelatorio.Consolidado, formato = FormatoExportacao.Excel })" class="btn btn-outline-info w-100">
+                                    <i class="fas fa-file-excel me-2"></i>
+                                    Consolidado (Excel)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informações Importantes -->
+                    <div class="mt-4">
+                        <div class="alert alert-info">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Informações Importantes
+                            </h6>
+                            <ul class="mb-0">
+                                <li>Os relatórios incluem análises automáticas baseadas nos seus dados</li>
+                                <li>Valores de referência médicos são apresentados para comparação</li>
+                                <li>Alertas críticos são destacados quando necessário</li>
+                                <li>Recomendações gerais são fornecidas para orientação</li>
+                                <li><strong>IMPORTANTE:</strong> Este relatório não substitui consulta médica</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function setDateRange(days) {
+            const today = new Date();
+            const startDate = new Date(today);
+            startDate.setDate(today.getDate() - days);
+            
+            document.getElementById('DataInicial').value = startDate.toISOString().split('T')[0];
+            document.getElementById('DataFinal').value = today.toISOString().split('T')[0];
+        }
+
+        // Validação de formulário
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        const dataInicial = new Date(document.getElementById('DataInicial').value);
+                        const dataFinal = new Date(document.getElementById('DataFinal').value);
+                        
+                        if (dataInicial > dataFinal) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            alert('A data inicial não pode ser maior que a data final.');
+                            return false;
+                        }
+                        
+                        const diffTime = Math.abs(dataFinal - dataInicial);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        if (diffDays > 365) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            alert('O período do relatório não pode ser maior que 1 ano.');
+                            return false;
+                        }
+
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}

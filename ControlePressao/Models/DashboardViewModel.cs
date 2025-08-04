@@ -6,6 +6,7 @@ namespace ControlePressao.Models
     {
         public List<Pressao> UltimasPressoes { get; set; } = new();
         public List<Glicose> UltimasGlicoses { get; set; } = new();
+        public List<Peso> UltimosPesos { get; set; } = new();
         public EstatisticasSaude Estatisticas { get; set; } = new();
         public List<AlertaSaude> Alertas { get; set; } = new();
     }
@@ -29,6 +30,18 @@ namespace ControlePressao.Models
 
         [Display(Name = "Total de Medições de Glicose")]
         public int TotalMedicoesGlicose { get; set; }
+
+        [Display(Name = "Total de Medições de Peso")]
+        public int TotalMedicoesPeso { get; set; }
+
+        [Display(Name = "IMC Médio")]
+        public double IMCMedio { get; set; }
+
+        [Display(Name = "Peso Médio")]
+        public double PesoMedio { get; set; }
+
+        [Display(Name = "Altura Média")]
+        public double AlturaMedia { get; set; }
 
         [Display(Name = "Última Medição")]
         public DateTime? UltimaMedicao { get; set; }

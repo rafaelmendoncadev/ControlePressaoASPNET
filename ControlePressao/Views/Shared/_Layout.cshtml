@@ -1,15 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ControlePressao</title>
-    <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/themes.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ControlePressao.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/icon-fixes.css" asp-append-version="true" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
@@ -41,6 +41,16 @@
                                 <i class="fas fa-droplet"></i> Glicose
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white btn-with-icon transition-all" asp-area="" asp-controller="Peso" asp-action="Index">
+                                <i class="fas fa-weight"></i> Peso
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white btn-with-icon transition-all" asp-area="" asp-controller="Relatorios" asp-action="Index">
+                                <i class="fas fa-chart-bar"></i> Relatórios
+                            </a>
+                        </li>
                     </ul>
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown">
@@ -53,6 +63,9 @@
                                 </a></li>
                                 <li><a class="dropdown-item btn-with-icon" asp-controller="Glicose" asp-action="Create">
                                     <i class="fas fa-droplet icon-warning"></i> Medição de Glicose
+                                </a></li>
+                                <li><a class="dropdown-item btn-with-icon" asp-controller="Peso" asp-action="Create">
+                                    <i class="fas fa-weight icon-dark"></i> Medição de Peso
                                 </a></li>
                             </ul>
                         </li>
@@ -107,11 +120,24 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Definir exports, module e require globalmente para evitar erro CommonJS
+        if (typeof exports === 'undefined') {
+            var exports = {};
+        }
+        if (typeof module === 'undefined') {
+            var module = { exports: {} };
+        }
+        if (typeof require === 'undefined') {
+            var require = function() { return {}; };
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <!-- date-fns removido para evitar erro de require -->
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/theme-toggle.js" asp-append-version="true"></script>
     <script src="~/js/health-charts.js" asp-append-version="true"></script>
+    <script src="~/js/datetime-localization.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

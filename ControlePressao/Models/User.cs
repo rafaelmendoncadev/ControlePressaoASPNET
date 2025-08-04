@@ -22,10 +22,12 @@ namespace ControlePressao.Models
         
         [DataType(DataType.DateTime)]
         [Display(Name = "Data de Cadastro")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = false)]
         public DateTime DataCadastro { get; set; }
         
         [Display(Name = "Data de Nascimento")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? DataNascimento { get; set; }
         
         [StringLength(15, ErrorMessage = "O telefone deve ter no máximo 15 caracteres.")]
@@ -37,6 +39,7 @@ namespace ControlePressao.Models
         // Relacionamentos
         public ICollection<Pressao>? Pressoes { get; set; }
         public ICollection<Glicose>? Glicoses { get; set; }
+        public ICollection<Peso>? Pesos { get; set; }
         
         public User()
         {
@@ -44,4 +47,4 @@ namespace ControlePressao.Models
             Ativo = true;
         }
     }
-} 
+}

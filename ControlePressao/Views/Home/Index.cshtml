@@ -23,7 +23,7 @@
                 @foreach (var alerta in Model.Alertas)
                 {
                     <div class="alert @alerta.Classe alert-modern animate-slide-in-down" role="alert">
-                        <i class="fas fa-@(alerta.Tipo == "Pressão" ? "heartbeat" : alerta.Tipo == "Glicose" ? "droplet" : "bell") alert-icon"></i>
+                        <i class="fas fa-@(alerta.Tipo == "Pressão" ? "heartbeat" : alerta.Tipo == "Glicose" ? "droplet" : alerta.Tipo == "Peso" ? "weight" : "bell") alert-icon"></i>
                         <div class="alert-title">@alerta.Tipo</div>
                         @alerta.Mensagem
                         <small class="text-muted float-end">@alerta.DataHora.ToString("dd/MM/yyyy HH:mm")</small>
@@ -85,6 +85,31 @@
                 </div>
             </div>
         </div>
+        <div class="col">
+            <div class="card card-secondary stat-card animate-fade-in-up hover-lift" style="animation-delay: 0.5s;">
+                <div class="stat-value">@Model.Estatisticas.TotalMedicoesPeso</div>
+                <div class="stat-label">
+                    <i class="fas fa-weight"></i> Medições de Peso
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card card-dark stat-card animate-fade-in-up hover-lift" style="animation-delay: 0.6s;">
+                <div class="stat-value">
+                    @if (Model.Estatisticas.TotalMedicoesPeso > 0)
+                    {
+                        <text>@Model.Estatisticas.IMCMedio.ToString("F1")</text>
+                    }
+                    else
+                    {
+                        <text>--</text>
+                    }
+                </div>
+                <div class="stat-label">
+                    <i class="fas fa-calculator"></i> IMC Médio
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Ações Rápidas -->
@@ -100,11 +125,17 @@
                 <a href="@Url.Action("Create", "Glicose")" class="btn btn-success btn-with-icon hover-lift">
                     <i class="fas fa-plus-circle"></i> Nova Medição de Glicose
                 </a>
+                <a href="@Url.Action("Create", "Peso")" class="btn btn-dark btn-with-icon hover-lift">
+                    <i class="fas fa-plus-circle"></i> Nova Medição de Peso
+                </a>
                 <a href="@Url.Action("Index", "Pressao")" class="btn btn-outline-primary btn-with-icon hover-lift">
                     <i class="fas fa-chart-line"></i> Ver Todas as Pressões
                 </a>
                 <a href="@Url.Action("Index", "Glicose")" class="btn btn-outline-success btn-with-icon hover-lift">
                     <i class="fas fa-chart-area"></i> Ver Todas as Glicoses
+                </a>
+                <a href="@Url.Action("Index", "Peso")" class="btn btn-outline-dark btn-with-icon hover-lift">
+                    <i class="fas fa-weight"></i> Ver Todos os Pesos
                 </a>
             </div>
         </div>
@@ -194,7 +225,7 @@
     <!-- Últimas Medições -->
     <div class="row">
         <!-- Últimas Pressões -->
-        <div class="col-md-6">
+        <div class="col-lg-4 col-md-6">
             <div class="card card-gradient animate-fade-in-up hover-lift" style="animation-delay: 0.5s;">
                 <div class="card-header">
                     <h5 class="card-title mb-0 btn-with-icon">
@@ -248,7 +279,7 @@
         </div>
 
         <!-- Últimas Glicoses -->
-        <div class="col-md-6">
+        <div class="col-lg-4 col-md-6">
             <div class="card card-gradient animate-fade-in-up hover-lift" style="animation-delay: 0.6s;">
                 <div class="card-header">
                     <h5 class="card-title mb-0 btn-with-icon">
@@ -293,6 +324,71 @@
                             <i class="fas fa-droplet text-muted fa-3x mb-3"></i>
                             <p class="text-muted">Nenhuma medição de glicose registrada.</p>
                             <a href="@Url.Action("Create", "Glicose")" class="btn btn-success btn-with-icon">
+                                <i class="fas fa-plus"></i> Primeira Medição
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Últimas Medições de Peso -->
+        <div class="col-lg-4 col-md-12">
+            <div class="card card-gradient animate-fade-in-up hover-lift" style="animation-delay: 0.7s;">
+                <div class="card-header">
+                    <h5 class="card-title mb-0 btn-with-icon">
+                        <i class="fas fa-weight icon-dark"></i> Últimas Medições de Peso
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.UltimosPesos.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-modern table-sm">
+                                <thead>
+                                    <tr>
+                                        <th><i class="fas fa-calendar icon-info"></i> Data</th>
+                                        <th><i class="fas fa-weight icon-dark"></i> Peso</th>
+                                        <th><i class="fas fa-calculator icon-primary"></i> IMC</th>
+                                        <th><i class="fas fa-shield-alt icon-success"></i> Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var peso in Model.UltimosPesos.Take(5))
+                                    {
+                                        <tr class="transition-all">
+                                            <td>@peso.DataHora.ToString("dd/MM HH:mm")</td>
+                                            <td><strong>@peso.PesoKg kg</strong></td>
+                                            <td>@peso.IMC</td>
+                                            <td>
+                                                @{
+                                                    string badgeClass = peso.ClassificacaoIMC switch
+                                                    {
+                                                        "Baixo peso" => "warning",
+                                                        "Peso normal" => "success",
+                                                        "Sobrepeso" => "warning",
+                                                        "Obesidade Grau I" => "danger",
+                                                        "Obesidade Grau II" => "danger",
+                                                        "Obesidade Grau III" => "dark",
+                                                        _ => "secondary"
+                                                    };
+                                                }
+                                                <span class="badge badge-modern bg-@badgeClass">
+                                                    @peso.ClassificacaoIMC
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-weight text-muted fa-3x mb-3"></i>
+                            <p class="text-muted">Nenhuma medição de peso registrada.</p>
+                            <a href="@Url.Action("Create", "Peso")" class="btn btn-dark btn-with-icon">
                                 <i class="fas fa-plus"></i> Primeira Medição
                             </a>
                         </div>

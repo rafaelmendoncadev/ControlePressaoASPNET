@@ -11,6 +11,7 @@ namespace ControlePressao.Data
 
         public DbSet<Pressao> Pressao { get; set; }
         public DbSet<Glicose> Glicose { get; set; }
+        public DbSet<Peso> Peso { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -28,6 +29,12 @@ namespace ControlePressao.Data
                 .HasOne(g => g.User)
                 .WithMany(u => u.Glicoses)
                 .HasForeignKey(g => g.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Peso>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.Pesos)
+                .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Configurações de índices

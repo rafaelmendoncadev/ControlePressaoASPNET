@@ -1,0 +1,136 @@
+@model ControlePressao.Models.Peso
+
+@{
+    ViewData["Title"] = "Excluir Medição de Peso";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-trash"></i> Excluir Medição de Peso
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Atenção!</strong> Você está prestes a excluir esta medição de peso. Esta ação não pode ser desfeita.
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-calendar"></i> @Html.DisplayNameFor(model => model.DataHora)
+                            </label>
+                            <div class="form-control-plaintext">
+                                @Html.DisplayFor(model => model.DataHora)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-ruler-vertical"></i> @Html.DisplayNameFor(model => model.Altura)
+                            </label>
+                            <div class="form-control-plaintext">
+                                @Html.DisplayFor(model => model.Altura) cm
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-weight"></i> @Html.DisplayNameFor(model => model.PesoKg)
+                            </label>
+                            <div class="form-control-plaintext">
+                                @Html.DisplayFor(model => model.PesoKg) kg
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-calculator"></i> IMC
+                            </label>
+                            <div class="form-control-plaintext">
+                                <span class="badge bg-info">@Model.IMC</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-clipboard-check"></i> Classificação IMC
+                            </label>
+                            <div class="form-control-plaintext">
+                                @{
+                                    string badgeClass = Model.ClassificacaoIMC switch
+                                    {
+                                        "Baixo peso" => "bg-warning",
+                                        "Peso normal" => "bg-success",
+                                        "Sobrepeso" => "bg-warning",
+                                        "Obesidade Grau I" => "bg-danger",
+                                        "Obesidade Grau II" => "bg-danger",
+                                        "Obesidade Grau III" => "bg-dark",
+                                        _ => "bg-secondary"
+                                    };
+                                }
+                                <span class="badge @badgeClass">@Model.ClassificacaoIMC</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-target"></i> Status do Peso
+                            </label>
+                            <div class="form-control-plaintext">
+                                @{
+                                    string statusClass = Model.StatusPeso.Contains("ideal") ? "text-success" : 
+                                                        Model.StatusPeso.Contains("acima") ? "text-warning" : "text-info";
+                                }
+                                <span class="@statusClass">@Model.StatusPeso</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Observacoes))
+                {
+                    <div class="mb-3">
+                        <label class="form-label text-muted">
+                            <i class="fas fa-sticky-note"></i> @Html.DisplayNameFor(model => model.Observacoes)
+                        </label>
+                        <div class="form-control-plaintext">
+                            @Html.DisplayFor(model => model.Observacoes)
+                        </div>
+                    </div>
+                }
+
+                <form asp-action="Delete" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" />
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Confirmar Exclusão
+                        </button>
+                        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-info">
+                            <i class="fas fa-eye"></i> Ver Detalhes
+                        </a>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

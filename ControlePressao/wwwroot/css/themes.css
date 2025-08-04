@@ -324,6 +324,101 @@ body {
   font-weight: 500;
 }
 
+/* Correção específica para inputs datetime-local no tema dark */
+[data-theme="dark"] input[type="datetime-local"] {
+  color: var(--text-primary) !important;
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] input[type="datetime-local"]:focus {
+  color: var(--text-primary) !important;
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-focus) !important;
+}
+
+/* Correção para o ícone do calendário no datetime-local */
+[data-theme="dark"] input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 1;
+}
+
+[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-text {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-month-field {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-day-field {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-year-field {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-hour-field {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] input[type="datetime-local"]::-webkit-datetime-edit-minute-field {
+  color: var(--text-primary) !important;
+}
+
+/* Correção para placeholder de textarea e inputs no tema dark */
+[data-theme="dark"] textarea::placeholder,
+[data-theme="dark"] input::placeholder {
+  color: var(--text-secondary) !important;
+  opacity: 0.8 !important;
+}
+
+[data-theme="dark"] textarea:focus::placeholder,
+[data-theme="dark"] input:focus::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.6 !important;
+}
+
+/* Configuração para inputs datetime-local - formato brasileiro */
+input[type="datetime-local"] {
+  position: relative;
+}
+
+/* Força localização brasileira para datetime-local */
+input[type="datetime-local"]::-webkit-datetime-edit {
+  direction: ltr;
+}
+
+input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper {
+  direction: ltr;
+}
+
+/* Configuração específica para formato brasileiro dd/MM/yyyy */
+input[type="datetime-local"]:lang(pt-BR) {
+  direction: ltr;
+}
+
+/* Estilo adicional para melhor UX */
+input[type="datetime-local"] {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
 /* Alertas */
 .alert {
   border-radius: var(--radius-md);
@@ -516,4 +611,4 @@ body {
   .btn-group .btn {
     width: auto;
   }
-} 
+}

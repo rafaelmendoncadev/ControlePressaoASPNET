@@ -9,14 +9,14 @@ namespace ControlePressao.Scripts
     {
         public static async Task ExecuteMigrationAsync()
         {
-            Console.WriteLine("=== Migração para SQL Server ===");
+            Console.WriteLine("=== Migração para SQLite ===");
             
             try
             {
-                var connectionString = "Server=rafaelmendoncadev.database.windows.net,1433;Initial Catalog=ControlePressao;Persist Security Info=False;User ID=CloudSAc2b09158;Password=#Jlm312317;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+                var connectionString = "Data Source=ControlePressao.db";
                 
                 var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                    .UseSqlServer(connectionString)
+                    .UseSqlite(connectionString)
                     .Options;
 
                 using var context = new ApplicationDbContext(options);
@@ -36,4 +36,4 @@ namespace ControlePressao.Scripts
             }
         }
     }
-} 
+}

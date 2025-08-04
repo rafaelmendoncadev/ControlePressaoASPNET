@@ -1,0 +1,99 @@
+/* ===== CORREÇÕES DE ÍCONES PARA TEMAS ===== */
+
+/* Ícones gerais - garantir visibilidade em ambos os temas */
+.fas, .far, .fab {
+    color: inherit;
+}
+
+/* Correção específica para ícones em labels de formulário - tema escuro */
+[data-theme="dark"] label .fas,
+[data-theme="dark"] label .far,
+[data-theme="dark"] label .fab,
+[data-theme="dark"] .form-label .fas,
+[data-theme="dark"] .form-label .far,
+[data-theme="dark"] .form-label .fab {
+    color: var(--text-primary) !important;
+    opacity: 1 !important;
+}
+
+/* Ícones em labels - tema claro */
+:root .form-label .fas,
+:root .form-label .far,
+:root .form-label .fab {
+    color: var(--text-primary);
+}
+
+/* Ícones específicos que podem ter problemas de contraste - maior especificidade */
+[data-theme="dark"] .fas.fa-calendar,
+[data-theme="dark"] .fas.fa-heart,
+[data-theme="dark"] .fas.fa-heartbeat,
+[data-theme="dark"] .fas.fa-arrow-up,
+[data-theme="dark"] .fas.fa-arrow-down,
+[data-theme="dark"] .fas.fa-sticky-note,
+[data-theme="dark"] .fas.fa-save,
+[data-theme="dark"] .fas.fa-times,
+[data-theme="dark"] .fas.fa-info-circle,
+[data-theme="dark"] .fas.fa-exclamation-triangle {
+    color: var(--text-primary) !important;
+    opacity: 1 !important;
+}
+
+/* Correção específica para ícones em formulários */
+[data-theme="dark"] .card-body .fas,
+[data-theme="dark"] .card-body .far,
+[data-theme="dark"] .card-body .fab {
+    color: var(--text-primary) !important;
+}
+
+/* Ícones em botões - manter cores específicas */
+.btn .fas,
+.btn .far,
+.btn .fab {
+    color: inherit;
+}
+
+/* Ícones em cards informativos */
+[data-theme="dark"] .card-header .fas,
+[data-theme="dark"] .card-header .far,
+[data-theme="dark"] .card-header .fab {
+    color: var(--text-white) !important;
+}
+
+/* Ícones em alertas */
+[data-theme="dark"] .alert .fas,
+[data-theme="dark"] .alert .far,
+[data-theme="dark"] .alert .fab {
+    color: inherit;
+}
+
+/* Garantir que ícones em badges mantenham suas cores */
+.badge .fas,
+.badge .far,
+.badge .fab {
+    color: inherit;
+}
+
+/* Ícones de navegação */
+[data-theme="dark"] .navbar .fas,
+[data-theme="dark"] .navbar .far,
+[data-theme="dark"] .navbar .fab {
+    color: var(--text-primary);
+}
+
+/* Hover states para ícones interativos */
+[data-theme="dark"] .btn:hover .fas,
+[data-theme="dark"] .btn:hover .far,
+[data-theme="dark"] .btn:hover .fab,
+[data-theme="dark"] .nav-link:hover .fas,
+[data-theme="dark"] .nav-link:hover .far,
+[data-theme="dark"] .nav-link:hover .fab {
+    opacity: 1;
+    transition: opacity var(--transition-fast);
+}
+
+/* Força aplicação em todos os elementos dentro do body no tema dark */
+[data-theme="dark"] body .fas:not(.btn .fas):not(.badge .fas):not(.alert .fas),
+[data-theme="dark"] body .far:not(.btn .far):not(.badge .far):not(.alert .far),
+[data-theme="dark"] body .fab:not(.btn .fab):not(.badge .fab):not(.alert .fab) {
+    color: var(--text-primary) !important;
+}

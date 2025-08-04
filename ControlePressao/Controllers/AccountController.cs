@@ -21,14 +21,14 @@ namespace ControlePressao.Controllers
             _context = context;
         }
         [HttpGet]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
@@ -58,7 +58,7 @@ namespace ControlePressao.Controllers
                         new ClaimsPrincipal(claimsIdentity),
                         authProperties);
 
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToLocal(returnUrl ?? "");
                 }
                 
                 // Manter a conta admin fixa como backup
@@ -84,7 +84,7 @@ namespace ControlePressao.Controllers
                         new ClaimsPrincipal(claimsIdentity),
                         authProperties);
 
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToLocal(returnUrl ?? "");
                 }
                 
                 ModelState.AddModelError(string.Empty, "Email ou senha incorretos.");
@@ -111,49 +111,56 @@ namespace ControlePressao.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Verificar se o email já existe
-                var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-                if (existingUser != null)
+                try
                 {
-                    ModelState.AddModelError(string.Empty, "Este email já está em uso.");
-                    return View(model);
+                    // Verificar se o email já existe
+                    var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+                    if (existingUser != null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Este email já está em uso.");
+                        return View(model);
+                    }
+
+                    // Criar novo usuário
+                    var user = new User
+                    {
+                        Nome = model.Nome,
+                        Email = model.Email,
+                        Senha = HashPassword(model.Senha),
+                        DataNascimento = model.DataNascimentoDateTime,
+                        Telefone = model.Telefone
+                    };
+
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+
+                    // Fazer login automático após o cadastro
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, user.Email),
+                        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                        new Claim("FullName", user.Nome)
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(
+                        claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = false
+                    };
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        authProperties);
+
+                    return RedirectToAction("Index", "Home");
                 }
-
-                // Criar novo usuário
-                var user = new User
+                catch (Exception)
                 {
-                    Nome = model.Nome,
-                    Email = model.Email,
-                    Senha = HashPassword(model.Senha),
-                    DataNascimento = model.DataNascimento,
-                    Telefone = model.Telefone
-                };
-
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                // Fazer login automático após o cadastro
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.Email),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim("FullName", user.Nome)
-                };
-
-                var claimsIdentity = new ClaimsIdentity(
-                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                var authProperties = new AuthenticationProperties
-                {
-                    IsPersistent = false
-                };
-
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    authProperties);
-
-                return RedirectToAction("Index", "Home");
+                    ModelState.AddModelError(string.Empty, "Erro interno do servidor. Tente novamente.");
+                }
             }
 
             return View(model);

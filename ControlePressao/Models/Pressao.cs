@@ -9,6 +9,7 @@ namespace ControlePressao.Models
 
         [Display(Name = "Data e Hora")]
         [Required(ErrorMessage = "A data e hora são obrigatórias")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}", ApplyFormatInEditMode = true)]
         public DateTime DataHora { get; set; }
 
         [Display(Name = "Pressão Sistólica (mmHg)")]

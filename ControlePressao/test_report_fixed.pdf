@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - ControlePressao</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/themes.css?v=tUO9poKzEcqii2dTcK88nXJ3ZHcKBKQwMwzmfIArG2M" />
+    <link rel="stylesheet" href="/css/site.css?v=vU1BQy9D_Vnnvmllwo3YI9g3xqv40_uq0vGX7gTErXw" />
+    <link rel="stylesheet" href="/ControlePressao.styles.css?v=3WFuz1ADx90Io18nT6iXYEFhWbKxRS3by-V-GSNItQs" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-container">
+            <main role="main">
+                
+<div class="auth-card animate-fade-in-up">
+    <div class="auth-header">
+        <div class="auth-logo">
+            <i class="fas fa-heartbeat"></i>
+        </div>
+        <h1 class="auth-title">Bem-vindo de volta</h1>
+        <p class="auth-subtitle">Entre na sua conta para continuar</p>
+    </div>
+    
+    <div class="auth-body">
+        <form method="post" class="auth-form" action="/?returnurl=%2FRelatorios%2FIndex">
+            <div class="alert alert-danger alert-modern mb-4 validation-summary-valid" role="alert" style="display: none;" data-valmsg-summary="true"><ul><li style="display:none"></li>
+</ul></div>
+            
+            <div class="form-floating mb-3">
+                <input class="form-control modern-input" placeholder="Digite seu email" type="email" data-val="true" data-val-email="Email em formato inv&#xE1;lido." data-val-required="O campo Email &#xE9; obrigat&#xF3;rio." id="Email" name="Email" value="" />
+                <label class="form-label" for="Email">
+                    <i class="fas fa-envelope me-2"></i>Email
+                </label>
+                <span class="invalid-feedback field-validation-valid" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+            </div>
+            
+            <div class="form-floating mb-3">
+                <input class="form-control modern-input" placeholder="Digite sua senha" type="password" data-val="true" data-val-required="O campo Senha &#xE9; obrigat&#xF3;rio." id="Password" name="Password" />
+                <label class="form-label" for="Password">
+                    <i class="fas fa-lock me-2"></i>Senha
+                </label>
+                <span class="invalid-feedback field-validation-valid" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+            </div>
+            
+            <div class="form-check mb-4">
+                <input class="form-check-input modern-checkbox" type="checkbox" data-val="true" data-val-required="The Lembrar-me field is required." id="RememberMe" name="RememberMe" value="true" />
+                <label class="form-check-label" for="RememberMe">
+                    Lembrar de mim
+                </label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-modern w-100 mb-3">
+                <i class="fas fa-sign-in-alt me-2"></i>
+                Entrar
+            </button>
+        <input name="__RequestVerificationToken" type="hidden" value="CfDJ8EwGnQNytzVLg9wFBLqj4ER0jMQuMATHTD-zyVF3PGZRODNa1txFYCZEKQ9QQLZojOozxtXC-mPN-jBrDArrdQoyqpma7JrW4nGjXueoNsMceCgT63_JMr5fbu77C1Ww0NJm1F6wxtPmOUPIActSlJs" /><input name="RememberMe" type="hidden" value="false" /></form>
+        
+        <!-- Botão de acesso rápido para teste -->
+        <div class="test-user-section mb-3">
+            <button type="button" class="btn btn-outline-info btn-modern w-100" onclick="fillTestUser()">
+                <i class="fas fa-user-cog me-2"></i>
+                Acesso Rápido - Usuário Teste
+            </button>
+            <small class="text-muted d-block text-center mt-1">
+                Email: teste@teste.com | Senha: 123456
+            </small>
+        </div>
+        
+        <div class="auth-divider">
+            <span>ou</span>
+        </div>
+        
+        <div class="auth-footer">
+            <p class="text-center mb-0">
+                Não tem uma conta? 
+                <a class="auth-link" href="/Account/Register">Cadastre-se aqui</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+
+            </main>
+        </div>
+    </div>
+
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/site.js?v=NDoMLkCWqDKqFYZ9tSql8R8dlo1QoCynj-Tjz9JGoD4"></script>
+    <script src="/js/theme-toggle.js?v=nZxt_FKgXRSRy6YuOEtHVOg2ONMwovoCyLUud4g4JqU"></script>
+    
+    <script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        function fillTestUser() {
+            // Preencher os campos com as credenciais do usuário teste
+            document.getElementById('Email').value = 'teste@teste.com';
+            document.getElementById('Password').value = '123456';
+            
+            // Adicionar efeito visual para indicar que os campos foram preenchidos
+            const emailField = document.getElementById('Email');
+            const passwordField = document.getElementById('Password');
+            
+            emailField.classList.add('is-valid');
+            passwordField.classList.add('is-valid');
+            
+            // Remover a classe após alguns segundos
+            setTimeout(() => {
+                emailField.classList.remove('is-valid');
+                passwordField.classList.remove('is-valid');
+            }, 2000);
+            
+            // Focar no botão de submit
+            document.querySelector('button[type="submit"]').focus();
+        }
+    </script>
+
+</body>
+</html>

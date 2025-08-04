@@ -1,0 +1,137 @@
+@model ControlePressao.Models.Peso
+
+@{
+    ViewData["Title"] = "Nova Medição de Peso";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-weight text-primary"></i> Nova Medição de Peso
+                </h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-triangle"></i> Corrija os erros abaixo:
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="DataHora" class="form-label">
+                                    <i class="fas fa-calendar"></i> @Html.DisplayNameFor(m => m.DataHora)
+                                </label>
+                                <input asp-for="DataHora" class="form-control" type="datetime-local" lang="pt-BR" />
+                                <span asp-validation-for="DataHora" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="Altura" class="form-label">
+                                    <i class="fas fa-ruler-vertical"></i> @Html.DisplayNameFor(m => m.Altura)
+                                </label>
+                                <input asp-for="Altura" class="form-control" type="number" step="0.1" min="100" max="250" />
+                                <span asp-validation-for="Altura" class="text-danger"></span>
+                                <div class="form-text">Altura entre 100 e 250 cm</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label asp-for="PesoKg" class="form-label">
+                                    <i class="fas fa-weight"></i> @Html.DisplayNameFor(m => m.PesoKg)
+                                </label>
+                                <input asp-for="PesoKg" class="form-control" type="number" step="0.1" min="20" max="300" />
+                                <span asp-validation-for="PesoKg" class="text-danger"></span>
+                                <div class="form-text">Peso entre 20 e 300 kg</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-calculator"></i> IMC Calculado
+                                </label>
+                                <div class="form-control-plaintext" id="imcCalculado">
+                                    <span class="text-muted">Preencha altura e peso para calcular</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Observacoes" class="form-label">
+                            <i class="fas fa-sticky-note"></i> @Html.DisplayNameFor(m => m.Observacoes)
+                        </label>
+                        <textarea asp-for="Observacoes" class="form-control" rows="3" placeholder="Observações adicionais (opcional)"></textarea>
+                        <span asp-validation-for="Observacoes" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Salvar Medição
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        function calcularIMC() {
+            const altura = parseFloat(document.querySelector('input[name="Altura"]').value);
+            const peso = parseFloat(document.querySelector('input[name="PesoKg"]').value);
+            const imcDiv = document.getElementById('imcCalculado');
+
+            if (altura && peso && altura > 0 && peso > 0) {
+                const alturaMetros = altura / 100;
+                const imc = (peso / (alturaMetros * alturaMetros)).toFixed(2);
+                
+                let classificacao = '';
+                let badgeClass = '';
+                
+                if (imc < 18.5) {
+                    classificacao = 'Baixo peso';
+                    badgeClass = 'bg-warning';
+                } else if (imc < 25) {
+                    classificacao = 'Peso normal';
+                    badgeClass = 'bg-success';
+                } else if (imc < 30) {
+                    classificacao = 'Sobrepeso';
+                    badgeClass = 'bg-warning';
+                } else if (imc < 35) {
+                    classificacao = 'Obesidade Grau I';
+                    badgeClass = 'bg-danger';
+                } else if (imc < 40) {
+                    classificacao = 'Obesidade Grau II';
+                    badgeClass = 'bg-danger';
+                } else {
+                    classificacao = 'Obesidade Grau III';
+                    badgeClass = 'bg-dark';
+                }
+                
+                imcDiv.innerHTML = `<span class="badge ${badgeClass}">${imc}</span> <small class="text-muted">(${classificacao})</small>`;
+            } else {
+                imcDiv.innerHTML = '<span class="text-muted">Preencha altura e peso para calcular</span>';
+            }
+        }
+
+        document.querySelector('input[name="Altura"]').addEventListener('input', calcularIMC);
+        document.querySelector('input[name="PesoKg"]').addEventListener('input', calcularIMC);
+        
+        // Calcular IMC inicial se campos já estiverem preenchidos
+        document.addEventListener('DOMContentLoaded', calcularIMC);
+    </script>
+}

@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet ef migrations add:*)",
+      "Bash(taskkill:*)",
+      "Bash(dotnet clean:*)",
+      "Bash(wmic process where:*)",
+      "Bash(dotnet ef database:*)",
+      "Bash(dotnet ef migrations:*)",
+      "Bash(sqlite3:*)",
+      "Bash(mkdir:*)",
+      "Bash(dotnet remove:*)",
+      "Bash(dotnet add package:*)"
+    ],
+    "deny": []
+  }
+}

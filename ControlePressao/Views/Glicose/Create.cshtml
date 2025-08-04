@@ -4,20 +4,6 @@
     ViewData["Title"] = "Nova Medição de Glicose";
 }
 
-<!-- Debug Info -->
-@if (User.Identity?.IsAuthenticated == true)
-{
-    <div class="alert alert-info">
-        <strong>Debug:</strong> Usuário autenticado: @User.Identity.Name (ID: @User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value)
-    </div>
-}
-else
-{
-    <div class="alert alert-warning">
-        <strong>Debug:</strong> Usuário NÃO autenticado!
-    </div>
-}
-
 <div class="row">
     <div class="col-md-8 mx-auto">
         <div class="card">
@@ -39,7 +25,7 @@ else
                                 <label asp-for="DataHora" class="form-label">
                                     <i class="fas fa-calendar"></i> @Html.DisplayNameFor(m => m.DataHora)
                                 </label>
-                                <input asp-for="DataHora" class="form-control" type="datetime-local" />
+                                <input asp-for="DataHora" class="form-control" type="datetime-local" lang="pt-BR" />
                                 <span asp-validation-for="DataHora" class="text-danger"></span>
                             </div>
                         </div>

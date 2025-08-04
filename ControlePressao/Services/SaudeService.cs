@@ -34,6 +34,12 @@ namespace ControlePressao.Services
                 .Take(10)
                 .ToListAsync();
 
+            var ultimosPesos = await _context.Peso
+                .Where(p => p.UserId == userId)
+                .OrderByDescending(p => p.DataHora)
+                .Take(10)
+                .ToListAsync();
+
             var estatisticas = await ObterEstatisticasAsync(userId);
             var alertas = await ObterAlertasAsync(userId);
 
@@ -41,6 +47,7 @@ namespace ControlePressao.Services
             {
                 UltimasPressoes = ultimasPressoes,
                 UltimasGlicoses = ultimasGlicoses,
+                UltimosPesos = ultimosPesos,
                 Estatisticas = estatisticas,
                 Alertas = alertas
             };
@@ -100,6 +107,38 @@ namespace ControlePressao.Services
                 }
             }
 
+            // Verificar IMC alto recente
+            var pesoRecente = await _context.Peso
+                .Where(p => p.UserId == userId && p.DataHora >= DateTime.Now.AddDays(-30))
+                .OrderByDescending(p => p.DataHora)
+                .FirstOrDefaultAsync();
+
+            if (pesoRecente != null)
+            {
+                if (pesoRecente.ClassificacaoIMC == "Obesidade Grau I" || 
+                    pesoRecente.ClassificacaoIMC == "Obesidade Grau II" || 
+                    pesoRecente.ClassificacaoIMC == "Obesidade Grau III")
+                {
+                    alertas.Add(new AlertaSaude
+                    {
+                        Tipo = "Peso",
+                        Mensagem = $"IMC elevado detectado: {pesoRecente.IMC} ({pesoRecente.ClassificacaoIMC})",
+                        Classe = "alert-warning",
+                        DataHora = pesoRecente.DataHora
+                    });
+                }
+                else if (pesoRecente.ClassificacaoIMC == "Baixo peso")
+                {
+                    alertas.Add(new AlertaSaude
+                    {
+                        Tipo = "Peso",
+                        Mensagem = $"Baixo peso detectado: IMC {pesoRecente.IMC}",
+                        Classe = "alert-info",
+                        DataHora = pesoRecente.DataHora
+                    });
+                }
+            }
+
             // Verificar se não há medições recentes
             var ultimaMedicao = await ObterUltimaMedicaoAsync(userId);
             if (ultimaMedicao.HasValue && ultimaMedicao.Value <= DateTime.Now.AddDays(-7))
@@ -124,11 +163,15 @@ namespace ControlePressao.Services
             var glicoses = await _context.Glicose
                 .Where(g => g.UserId == userId)
                 .ToListAsync();
+            var pesos = await _context.Peso
+                .Where(p => p.UserId == userId)
+                .ToListAsync();
 
             var estatisticas = new EstatisticasSaude
             {
                 TotalMedicoesPressao = pressoes.Count,
-                TotalMedicoesGlicose = glicoses.Count
+                TotalMedicoesGlicose = glicoses.Count,
+                TotalMedicoesPeso = pesos.Count
             };
 
             if (pressoes.Any())
@@ -141,6 +184,13 @@ namespace ControlePressao.Services
             if (glicoses.Any())
             {
                 estatisticas.GlicoseMedia = glicoses.Average(g => g.Valor);
+            }
+
+            if (pesos.Any())
+            {
+                estatisticas.IMCMedio = pesos.Average(p => p.IMC);
+                estatisticas.PesoMedio = pesos.Average(p => p.PesoKg);
+                estatisticas.AlturaMedia = pesos.Average(p => p.Altura);
             }
 
             estatisticas.UltimaMedicao = await ObterUltimaMedicaoAsync(userId);
@@ -162,16 +212,17 @@ namespace ControlePressao.Services
                 .Select(g => g.DataHora)
                 .FirstOrDefaultAsync();
 
-            if (ultimaPressao == default && ultimaGlicose == default)
-                return null;
+            var ultimoPeso = await _context.Peso
+                .Where(p => p.UserId == userId)
+                .OrderByDescending(p => p.DataHora)
+                .Select(p => p.DataHora)
+                .FirstOrDefaultAsync();
 
-            if (ultimaPressao == default)
-                return ultimaGlicose;
+            var medicoes = new[] { ultimaPressao, ultimaGlicose, ultimoPeso }
+                .Where(d => d != default)
+                .ToList();
 
-            if (ultimaGlicose == default)
-                return ultimaPressao;
-
-            return ultimaPressao > ultimaGlicose ? ultimaPressao : ultimaGlicose;
+            return medicoes.Any() ? medicoes.Max() : null;
         }
     }
 }

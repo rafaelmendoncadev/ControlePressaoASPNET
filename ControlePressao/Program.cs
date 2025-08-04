@@ -1,14 +1,30 @@
 using ControlePressao.Data;
 using ControlePressao.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<ISaudeService, SaudeService>();
+
+// Registrar serviços de relatórios
+builder.Services.AddScoped<AnaliseService>();
+builder.Services.AddScoped<PdfService>();
+builder.Services.AddScoped<ExcelService>();
+
+// Configuração de localização para português brasileiro
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { new CultureInfo("pt-BR") };
+    options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("pt-BR");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
+
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAuthentication("Cookies")
@@ -45,6 +61,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Usar localização
+app.UseRequestLocalization();
 
 app.UseRouting();
 

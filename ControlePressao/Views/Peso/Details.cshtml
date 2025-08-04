@@ -1,0 +1,174 @@
+@model ControlePressao.Models.Peso
+
+@{
+    ViewData["Title"] = "Detalhes da Medição de Peso";
+}
+
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-weight text-primary"></i> Detalhes da Medição de Peso
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-calendar"></i> @Html.DisplayNameFor(model => model.DataHora)
+                            </label>
+                            <div class="form-control-plaintext">
+                                @Html.DisplayFor(model => model.DataHora)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-ruler-vertical"></i> @Html.DisplayNameFor(model => model.Altura)
+                            </label>
+                            <div class="form-control-plaintext">
+                                @Html.DisplayFor(model => model.Altura) cm
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-weight"></i> @Html.DisplayNameFor(model => model.PesoKg)
+                            </label>
+                            <div class="form-control-plaintext">
+                                @Html.DisplayFor(model => model.PesoKg) kg
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-calculator"></i> IMC
+                            </label>
+                            <div class="form-control-plaintext">
+                                <span class="badge bg-info fs-6">@Model.IMC</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-clipboard-check"></i> Classificação IMC
+                            </label>
+                            <div class="form-control-plaintext">
+                                @{
+                                    string badgeClass = Model.ClassificacaoIMC switch
+                                    {
+                                        "Baixo peso" => "bg-warning",
+                                        "Peso normal" => "bg-success",
+                                        "Sobrepeso" => "bg-warning",
+                                        "Obesidade Grau I" => "bg-danger",
+                                        "Obesidade Grau II" => "bg-danger",
+                                        "Obesidade Grau III" => "bg-dark",
+                                        _ => "bg-secondary"
+                                    };
+                                }
+                                <span class="badge @badgeClass fs-6">@Model.ClassificacaoIMC</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-exclamation-triangle"></i> Classe de Risco
+                            </label>
+                            <div class="form-control-plaintext">
+                                @{
+                                    string riscoClass = Model.ClasseRisco switch
+                                    {
+                                        "Baixo" => "text-success",
+                                        "Moderado" => "text-warning",
+                                        "Alto" => "text-danger",
+                                        "Muito Alto" => "text-danger",
+                                        "Extremamente Alto" => "text-danger",
+                                        _ => "text-secondary"
+                                    };
+                                }
+                                <span class="@riscoClass fw-bold">@Model.ClasseRisco</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-target"></i> Peso Ideal
+                            </label>
+                            <div class="form-control-plaintext">
+                                @Model.PesoIdeal kg
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">
+                                <i class="fas fa-chart-line"></i> Status do Peso
+                            </label>
+                            <div class="form-control-plaintext">
+                                @{
+                                    string statusClass = Model.StatusPeso.Contains("ideal") ? "text-success" : 
+                                                        Model.StatusPeso.Contains("acima") ? "text-warning" : "text-info";
+                                }
+                                <span class="@statusClass fw-bold">@Model.StatusPeso</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.Observacoes))
+                {
+                    <div class="mb-3">
+                        <label class="form-label text-muted">
+                            <i class="fas fa-sticky-note"></i> @Html.DisplayNameFor(model => model.Observacoes)
+                        </label>
+                        <div class="form-control-plaintext">
+                            @Html.DisplayFor(model => model.Observacoes)
+                        </div>
+                    </div>
+                }
+
+                <div class="alert alert-info" role="alert">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Informações sobre IMC:</strong>
+                    <ul class="mb-0 mt-2">
+                        <li><strong>Baixo peso:</strong> IMC menor que 18,5</li>
+                        <li><strong>Peso normal:</strong> IMC entre 18,5 e 24,9</li>
+                        <li><strong>Sobrepeso:</strong> IMC entre 25,0 e 29,9</li>
+                        <li><strong>Obesidade Grau I:</strong> IMC entre 30,0 e 34,9</li>
+                        <li><strong>Obesidade Grau II:</strong> IMC entre 35,0 e 39,9</li>
+                        <li><strong>Obesidade Grau III:</strong> IMC igual ou maior que 40,0</li>
+                    </ul>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Excluir
+                    </a>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fas fa-list"></i> Voltar à Lista
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

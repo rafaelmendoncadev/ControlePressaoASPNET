@@ -28,7 +28,19 @@ namespace ControlePressao.Data
                 Ativo = true
             };
 
-            context.Users.Add(adminUser);
+            // Criar usuário de teste
+            var testUser = new User
+            {
+                Nome = "Usuário Teste",
+                Email = "teste@teste.com",
+                Senha = HashPassword("123456"),
+                DataCadastro = DateTime.Now,
+                DataNascimento = new DateTime(1990, 5, 15),
+                Telefone = "(11) 99999-9999",
+                Ativo = true
+            };
+
+            context.Users.AddRange(adminUser, testUser);
             await context.SaveChangesAsync();
 
             // Criar alguns dados de exemplo para o admin
@@ -91,8 +103,70 @@ namespace ControlePressao.Data
                 }
             };
 
+            // Criar dados de exemplo para o usuário teste
+            var pressoesTestUser = new List<Pressao>
+            {
+                new Pressao
+                {
+                    UserId = testUser.Id,
+                    DataHora = DateTime.Now.AddDays(-7),
+                    Sistolica = 130,
+                    Diastolica = 85,
+                    FrequenciaCardiaca = 78,
+                    Observacoes = "Primeira medição"
+                },
+                new Pressao
+                {
+                    UserId = testUser.Id,
+                    DataHora = DateTime.Now.AddDays(-4),
+                    Sistolica = 128,
+                    Diastolica = 82,
+                    FrequenciaCardiaca = 76,
+                    Observacoes = "Após caminhada"
+                },
+                new Pressao
+                {
+                    UserId = testUser.Id,
+                    DataHora = DateTime.Now.AddDays(-1),
+                    Sistolica = 122,
+                    Diastolica = 79,
+                    FrequenciaCardiaca = 74,
+                    Observacoes = "Medição matinal"
+                }
+            };
+
+            var glicosesTestUser = new List<Glicose>
+            {
+                new Glicose
+                {
+                    UserId = testUser.Id,
+                    DataHora = DateTime.Now.AddDays(-6),
+                    Valor = 102,
+                    Periodo = PeriodoTeste.Jejum,
+                    Observacoes = "Jejum de 10 horas"
+                },
+                new Glicose
+                {
+                    UserId = testUser.Id,
+                    DataHora = DateTime.Now.AddDays(-3),
+                    Valor = 155,
+                    Periodo = PeriodoTeste.PosRefeicao,
+                    Observacoes = "1 hora após jantar"
+                },
+                new Glicose
+                {
+                    UserId = testUser.Id,
+                    DataHora = DateTime.Now.AddHours(-12),
+                    Valor = 92,
+                    Periodo = PeriodoTeste.Jejum,
+                    Observacoes = "Medição de controle"
+                }
+            };
+
             context.Pressao.AddRange(pressoesSample);
+            context.Pressao.AddRange(pressoesTestUser);
             context.Glicose.AddRange(glicosesSample);
+            context.Glicose.AddRange(glicosesTestUser);
             await context.SaveChangesAsync();
         }
 
