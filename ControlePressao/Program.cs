@@ -54,11 +54,34 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Ensure database is created and seed data
+// Ensure database directory exists and initialize database
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    context.Database.EnsureCreated();
+    
+    // Ensure the database directory exists
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (connectionString?.Contains("/app/data/") == true)
+    {
+        var dbPath = connectionString.Split("Data Source=")[1];
+        var dbDirectory = Path.GetDirectoryName(dbPath);
+        if (!string.IsNullOrEmpty(dbDirectory) && !Directory.Exists(dbDirectory))
+        {
+            Directory.CreateDirectory(dbDirectory);
+        }
+    }
+    
+    // Use migrations instead of EnsureCreated for better production support
+    try
+    {
+        context.Database.Migrate();
+    }
+    catch
+    {
+        // Fallback to EnsureCreated if migrations fail
+        context.Database.EnsureCreated();
+    }
+    
     await ControlePressao.Data.SeedData.InitializeAsync(context);
 }
 

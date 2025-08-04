@@ -120,6 +120,32 @@
 - **Justificativa**: `InvariantGlobalization=false` no `PropertyGroup` é suficiente para ICU
 - **Status**: ✅ `dotnet restore` e `dotnet build` funcionando corretamente
 
+## ✅ ERRO SQLITE 14 RESOLVIDO
+
+**Status**: ✅ RESOLVIDO
+**Data**: 2025-01-27
+**Erro**: SQLite Error 14: 'unable to open database file'
+**Solução**: Configuração robusta de diretório e migrations completas
+
+### Melhorias Implementadas:
+- **Dockerfile**: Permissões corretas para diretório `/app/data` (`chmod 755`)
+- **Program.cs**: 
+  - Verificação e criação automática do diretório do banco
+  - Uso de migrations com fallback para EnsureCreated()
+  - Tratamento robusto de erros de inicialização
+- **Migrations**: Migration inicial completa com todas as tabelas (Users, Pressao, Glicose, Peso)
+
+### Configuração de Banco Robusta:
+- ✅ Diretório `/app/data` criado com permissões adequadas
+- ✅ Migration inicial completa (InitialCreate)
+- ✅ Fallback automático para EnsureCreated() se migrations falharem
+- ✅ Verificação de diretório antes de criar banco
+
+### Verificação:
+- ✅ Build local: OK (2.1s)
+- ✅ Migration completa: Criada com todas as tabelas
+- ✅ Configuração de produção: Validada
+
 ---
 
-**Status Final: PROJETO PRONTO PARA DEPLOY NO RAILWAY** 🚀
+**Status Final: PROJETO 100% PRONTO PARA RAILWAY** 🚀

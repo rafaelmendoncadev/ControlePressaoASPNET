@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ControlePressao.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250804204933_AddPesoTableOnly")]
-    partial class AddPesoTableOnly
+    [Migration("20250804225249_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
