@@ -105,9 +105,11 @@
 - **Dockerfile**: Adicionado `libicu-dev` junto com `sqlite3`
 - **ControlePressao.csproj**: Configurado `InvariantGlobalization=false`
 
-### Erro dotnet restore (Resolvido)
-- **Problema**: Tag `RuntimeHostConfigurationOption` estava incorretamente dentro de `PropertyGroup`
-- **Solução**: Movida para `ItemGroup` separado conforme especificação MSBuild
+### Erro dotnet restore / MSB4066 (Resolvido)
+- **Problema 1**: Tag `RuntimeHostConfigurationOption` estava incorretamente dentro de `PropertyGroup`
+- **Problema 2**: Atributo `Include` não é reconhecido na tag `RuntimeHostConfigurationOption`
+- **Solução**: Removida completamente a tag `RuntimeHostConfigurationOption` (desnecessária)
+- **Justificativa**: `InvariantGlobalization=false` no `PropertyGroup` é suficiente para ICU
 - **Status**: ✅ `dotnet restore` e `dotnet build` funcionando corretamente
 
 ---
