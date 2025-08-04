@@ -1,7 +1,7 @@
 using ControlePressao.Data;
 using ControlePressao.Services;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
+// using System.Globalization; // Removido para compatibilidade com InvariantGlobalization
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,14 +26,14 @@ builder.Services.AddScoped<AnaliseService>();
 builder.Services.AddScoped<PdfService>();
 builder.Services.AddScoped<ExcelService>();
 
-// Configuração de localização para português brasileiro
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    var supportedCultures = new[] { new CultureInfo("pt-BR") };
-    options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("pt-BR");
-    options.SupportedCultures = supportedCultures;
-    options.SupportedUICultures = supportedCultures;
-});
+// Configuração de localização removida para compatibilidade com InvariantGlobalization
+// builder.Services.Configure<RequestLocalizationOptions>(options =>
+// {
+//     var supportedCultures = new[] { new CultureInfo("pt-BR") };
+//     options.DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("pt-BR");
+//     options.SupportedCultures = supportedCultures;
+//     options.SupportedUICultures = supportedCultures;
+// });
 
 builder.Services.AddControllersWithViews();
 
@@ -100,8 +100,8 @@ if (app.Environment.IsDevelopment())
 }
 app.UseStaticFiles();
 
-// Usar localização
-app.UseRequestLocalization();
+// Localização removida para compatibilidade com InvariantGlobalization
+// app.UseRequestLocalization();
 
 app.UseRouting();
 

@@ -2,6 +2,25 @@
 
 ## Status: PRONTO PARA DEPLOY ✅
 
+### 🔧 Erro de Globalização Resolvido (27/01/2025)
+
+**Problema**: `System.Globalization.CultureNotFoundException: Only the invariant culture is supported in globalization-invariant mode`
+
+**Causa Identificada**: Configuração de localização pt-BR conflitando com InvariantGlobalization=true.
+
+**Solução Implementada**:
+1. **Configuração de Globalização**: Ajustado InvariantGlobalization=false no projeto
+2. **Remoção de Localização**: Comentada configuração de cultura pt-BR no Program.cs
+3. **Compatibilidade Railway**: Aplicação preparada para modo invariant
+4. **Limpeza de Imports**: Removidos imports desnecessários de globalização
+5. **Estratégia Frontend**: Localização movida para JavaScript quando necessário
+
+**Arquivos Modificados**:
+- `ControlePressao.csproj`: InvariantGlobalization=false
+- `Program.cs`: Configuração de localização removida
+
+**Resultado**: Build limpo sem erros, compatibilidade máxima com Railway.
+
 ### 🔧 Erro de Injeção de Dependência Resolvido (04/08/2025)
 
 **Problema**: `Microsoft.Extensions.Internal.ActivatorUtilities.ConstructorMatcher.CreateInstance` falhando no Railway.
