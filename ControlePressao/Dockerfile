@@ -15,7 +15,12 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 
 # Install SQLite and ICU libraries (required for SQLite database and globalization)
-RUN apt-get update && apt-get install -y sqlite3 libicu-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    sqlite3 \
+    libicu-dev \
+    libicu72 \
+    icu-devtools \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy the published app
 COPY --from=build /app/out .
@@ -26,6 +31,9 @@ RUN mkdir -p /app/data
 # Set environment variables
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ASPNETCORE_URLS=http://+:$PORT
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
 
 # Expose port (Railway will set the PORT environment variable)
 EXPOSE $PORT

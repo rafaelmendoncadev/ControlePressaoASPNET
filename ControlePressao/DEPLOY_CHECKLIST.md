@@ -101,9 +101,13 @@
 
 ## ✅ Correções de Erros de Deploy
 
-### Erro ICU (Resolvido)
-- **Dockerfile**: Adicionado `libicu-dev` junto com `sqlite3`
-- **ControlePressao.csproj**: Configurado `InvariantGlobalization=false`
+### Erro ICU (Resolvido - Versão Robusta)
+- **Dockerfile**: 
+  - Instalação completa de ICU: `libicu-dev`, `libicu72`, `icu-devtools`
+  - Variáveis de ambiente: `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false`, `LC_ALL=C.UTF-8`, `LANG=C.UTF-8`
+- **ControlePressao.csproj**: 
+  - Configuração condicional de `InvariantGlobalization` baseada em variável de ambiente
+  - Fallback automático para modo invariant se ICU não estiver disponível
 
 ### Erro dotnet restore / MSB4066 (Resolvido)
 - **Problema 1**: Tag `RuntimeHostConfigurationOption` estava incorretamente dentro de `PropertyGroup`
