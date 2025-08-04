@@ -101,13 +101,17 @@
 
 ## ✅ Correções de Erros de Deploy
 
-### Erro ICU (Resolvido - Versão Robusta)
+### Erro ICU (Resolvido - Solução Definitiva)
+- **Problema**: Railway não consegue encontrar bibliotecas ICU mesmo com instalação completa
+- **Solução**: Modo Globalization Invariant ativado para produção
 - **Dockerfile**: 
-  - Instalação completa de ICU: `libicu-dev`, `libicu72`, `icu-devtools`
-  - Variáveis de ambiente: `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false`, `LC_ALL=C.UTF-8`, `LANG=C.UTF-8`
+  - Mantida instalação de ICU para compatibilidade: `libicu-dev`, `libicu72`, `icu-devtools`
+  - **DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true** (modo invariant ativado)
+  - Variáveis de ambiente: `LC_ALL=C.UTF-8`, `LANG=C.UTF-8`
 - **ControlePressao.csproj**: 
   - Configuração condicional de `InvariantGlobalization` baseada em variável de ambiente
-  - Fallback automático para modo invariant se ICU não estiver disponível
+  - **Produção**: Modo invariant (sem dependência de ICU)
+  - **Desenvolvimento**: Modo completo com localização pt-BR
 
 ### Erro dotnet restore / MSB4066 (Resolvido)
 - **Problema 1**: Tag `RuntimeHostConfigurationOption` estava incorretamente dentro de `PropertyGroup`
