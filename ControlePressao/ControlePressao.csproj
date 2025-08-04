@@ -8,6 +8,7 @@
     <PublishTrimmed>false</PublishTrimmed>
     <TrimMode>link</TrimMode>
     <InvariantGlobalization>false</InvariantGlobalization>
+    <RuntimeHostConfigurationOption Include="System.Globalization.Invariant" Value="false" />
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <PublishReadyToRun>false</PublishReadyToRun>

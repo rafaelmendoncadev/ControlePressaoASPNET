@@ -96,6 +96,8 @@
 - ✅ Removido usuário de teste e acesso rápido
 - ✅ Configurações de produção otimizadas
 - ✅ Estrutura de arquivos organizada
+- ✅ **CORREÇÃO ICU**: Adicionado `libicu-dev` no Dockerfile para suporte à globalização
+- ✅ **CORREÇÃO ICU**: Configurado `InvariantGlobalization=false` no projeto
 
 ---
 
